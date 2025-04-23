@@ -296,3 +296,6 @@ template class heap<int>;
 ![平均情況比較](https://github.com/allurelove17/Data-Structure/blob/main/Sorting/sorting_average_comparison.png)
 ![最壞情況比較](https://github.com/allurelove17/Data-Structure/blob/main/Sorting/sorting_worst_comparison.png)
 ![最差情況與平均情況比較](https://github.com/allurelove17/Data-Structure/blob/main/Sorting/sorting_comparison_combined.png) 
+
+## 測試與驗證
+## 申論及開發報告
