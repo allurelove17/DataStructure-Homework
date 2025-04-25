@@ -261,6 +261,8 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | Heap Sort | O(n log n) | O(n log n) | O(1) |
 | Composite Sort | 依選擇而異 | 依選擇而異 | 依選擇而異 |
 
+## 測試與驗證
+
 ### 最壞情況時間分析 (Worst Case Time Analysis)
 
 | Size | Insertion Sort (ms) | Quick Sort (ms) | Merge Sort (ms) | Heap Sort (ms) | Composite Sort (ms) |
@@ -308,8 +310,6 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | 3000                | Heap Sort (0.3688 ms)                  | Heap Sort (1.12684 ms)                    |
 | 4000                | Quick Sort (0.4926 ms)                 | Heap Sort (1.53607 ms)                    |
 | 5000                | Heap Sort (0.4692 ms)                  | Heap Sort (1.9203 ms)                     |
-
-## 測試與驗證
 
 ### 測試結果分析
 
