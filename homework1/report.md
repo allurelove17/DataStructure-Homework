@@ -274,7 +274,7 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | 4000 | 21.2019 | 1.1314 | 17.6809 | 0.6768 | 18.2585 |
 | 5000 | 30.4068 | 1.0143 | 15.6684 | 0.5399 | 24.6045 |
 
-![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/time_worst.png)
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/worst_case_linear.png)
 
 #### 平均情況時間分析（單位：毫秒）
 
@@ -287,7 +287,7 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | 4000 | 7.06719 | 0.606083 | 9.00245 | 0.492756 | 0.622332 |
 | 5000 | 10.9987 | 0.779912 | 11.2576 | 0.631728 | 0.807842 |
 
-![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/time_average.png)
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/average_case_linear.png)
 
 ### 空間複雜度分析（單位：KB）
 
