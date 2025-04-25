@@ -54,40 +54,61 @@ double insertion<T>::insertion_sort(int size) {
 
 ### Quick Sort
 ```cpp
-template<class T>
-void quick<T>::quick_sort(int left, int right) {
-    std::stack<std::pair<int, int>> stack;
-    stack.push(std::make_pair(left, right));
+int findMedianOfThree(int left, int mid, int right) {
+	T a = *(this->array + left);
+	T b = *(this->array + mid);
+	T c = *(this->array + right);
 
-    while (!stack.empty()) {
-        left = stack.top().first;
-        right = stack.top().second;
-        stack.pop();
+	if ((a <= b && b <= c) || (c <= b && b <= a))
+		return mid;
+	else if ((b <= a && a <= c) || (c <= a && a <= b))
+		return left;
+	else
+		return right;
+}
 
-        if (left < right) {
-            int p = pivot(left, right);
+int pivot(int left, int right) {
+	if (right - left > 2) {
+		int mid = left + (right - left) / 2;
+		int medianIndex = findMedianOfThree(left, mid, right);
 
-            if (p - left <= right - p) {
-                if (p + 1 < right)
-                    stack.push(std::make_pair(p + 1, right));
-                if (left < p - 1)
-                    stack.push(std::make_pair(left, p - 1));
-            }
-            else {
-                if (left < p - 1)
-                    stack.push(std::make_pair(left, p - 1));
-                if (p + 1 < right)
-                    stack.push(std::make_pair(p + 1, right));
-            }
-        }
-    }
+		if (medianIndex != right) {
+			T temp = *(this->array + medianIndex);
+			*(this->array + medianIndex) = *(this->array + right);
+			*(this->array + right) = temp;
+		}
+	}
+
+	int p = *(this->array + right), i = left - 1, j = left;
+	T c;
+	while (j < right) {
+		if (*(this->array + j) < p) {
+			++i;
+			c = *(this->array + i);
+			*(this->array + i) = *(this->array + j);
+			*(this->array + j) = c;
+		}
+		++j;
+	}
+	++i;
+	c = *(this->array + i);
+	*(this->array + i) = *(this->array + right);
+	*(this->array + right) = c;
+	return i;
+}
+
+void quick_sort(int left, int right) {
+	if (left < right) {
+		int p = pivot(left, right);
+		quick_sort(left, p - 1);
+		quick_sort(p + 1, right);
+	}
 }
 ```
 
 ### Merge Sort
 ```cpp
-template<class T>
-void Merge<T>::merge_sort(int left, int right) {
+void merge_sort(int left, int right) {
     int n = right - left + 1;
 
     for (int curr_size = 1; curr_size < n; curr_size *= 2) {
@@ -99,34 +120,71 @@ void Merge<T>::merge_sort(int left, int right) {
         }
     }
 }
+
+void merge(int left, int mid, int right) {
+    std::vector<T> leftsub(this->array + left, this->array + mid + 1),
+        rightsub(this->array + mid + 1, this->array + right + 1);
+    leftsub.push_back(INT_MAX);
+    rightsub.push_back(INT_MAX);
+    int left_ind = 0, right_ind = 0;
+    for (int i = left; i <= right; ++i) {
+        if (leftsub[left_ind] <= rightsub[right_ind]) {
+            *(this->array + i) = leftsub[left_ind];
+            left_ind++;
+        }
+        else {
+            *(this->array + i) = rightsub[right_ind];
+            right_ind++;
+        }
+    }
+}
 ```
 
 ### Heap Sort
 ```cpp
-template<class T>
-double heap<T>::heap_sort(int size) {
-    auto start = std::chrono::high_resolution_clock::now();
-    T c;
-    for (int i = size + 1; i > 0; --i) {
-        *(this->array + i) = *(this->array + i - 1);
-    }
-    *(this->array) = 0;
+void maxheap(int root, int length) {
+	int left = 2 * root, right = 2 * root + 1, max;
+	T c;
+	if (left <= length && *(this->array + left) > *(this->array + root))
+		max = left;
+	else
+		max = root;
+	if (right <= length && *(this->array + right) > *(this->array + max))
+		max = right;
+	if (max != root) {
+		c = *(this->array + root);
+		*(this->array + root) = *(this->array + max);
+		*(this->array + max) = c;
+		maxheap(max, length);
+	}
+}
 
-    build(size);
+void build(int size) {
+	for (int i = size / 2; i >= 1; --i) {
+		maxheap(i, size - 1);
+	}
+}
 
-    int len = size;
-    for (int i = size; i >= 2; --i) {
-        c = *(this->array + 1);
-        *(this->array + 1) = *(this->array + i);
-        *(this->array + i) = c;
-        --len;
-        maxheap(1, len);
-    }
-    for (int i = 0; i < size; i++) {
-        *(this->array + i) = *(this->array + i + 1);
-    }
-    auto end = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+void heap_sort(int size) {
+	T c;
+	for (int i = size + 1; i > 0; --i) {
+		*(this->array + i) = *(this->array + i - 1);
+	}
+	*(this->array) = 0;
+
+	build(size);
+
+	int len = size;
+	for (int i = size; i >= 2; --i) {
+		c = *(this->array + 1);
+		*(this->array + 1) = *(this->array + i);
+		*(this->array + i) = c;
+		--len;
+		maxheap(1, len);
+	}
+	for (int i = 0; i < size; i++) {
+		*(this->array + i) = *(this->array + i + 1);
+	}
 }
 ```
 
