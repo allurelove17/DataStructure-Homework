@@ -261,10 +261,6 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | Heap Sort | O(n log n) | O(n log n) | O(1) |
 | Composite Sort | 依選擇而異 | 依選擇而異 | 依選擇而異 |
 
-# Sorting Algorithm Performance Tables
-
-## 時間複雜度分析 (Time Complexity Analysis)
-
 ### 最壞情況時間分析 (Worst Case Time Analysis)
 
 | Size | Insertion Sort (ms) | Quick Sort (ms) | Merge Sort (ms) | Heap Sort (ms) | Composite Sort (ms) |
@@ -275,6 +271,8 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | 3000 | 10.3193             | 0.4287          | 10.5638         | 0.3688         | 8.9859              |
 | 4000 | 15.3013             | 0.4926          | 8.9249          | 0.7580         | 11.2211             |
 | 5000 | 21.3343             | 0.6283          | 12.1753         | 0.4692         | 10.8398             |
+
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/worst_case_linear.png)
 
 ### 平均情況時間分析 (Average Case Time Analysis)
 
@@ -287,9 +285,9 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | 4000 | 26.8695             | 1.80322         | 32.873          | 1.53607        | 1.85166             |
 | 5000 | 41.2792             | 2.19796         | 40.4564         | 1.9203         | 2.33062             |
 
-## 空間複雜度分析 (Space Complexity Analysis)
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/average_case_linear.png)
 
-### 記憶體使用比較 (Memory Usage Comparison) - KB
+## 空間複雜度分析 (Space Complexity Analysis) -KB
 
 | Size | Insertion Sort | Quick Sort | Merge Sort | Heap Sort | Composite (Worst) | Composite (Avg) |
 |------|----------------|------------|------------|-----------|-------------------|-----------------|
