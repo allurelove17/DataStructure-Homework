@@ -14,11 +14,6 @@
 
 ## 實驗方法
 
-### 測試環境
-- 開發環境：Windows 10
-- 編譯器：C++ 17 (G++)
-- 硬體：Intel Core i7-10700K，32GB RAM
-
 ### 測試資料產生
 
 1. **最壞情況 (Worst Case)**
@@ -136,7 +131,6 @@ double heap<T>::heap_sort(int size) {
 ```
 
 ### Composite Sort
-我的複合排序演算法根據輸入特性和資料量智能選擇最適合的排序方法：
 
 ```cpp
 template<class T>
@@ -209,10 +203,6 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | Heap Sort | O(n log n) | O(n log n) | O(1) |
 | Composite Sort | 依選擇而異 | 依選擇而異 | 依選擇而異 |
 
-![Big-O Complexity Chart](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*5ZLci3SuR0zM_QlZOADv8Q.jpeg)
-
-*圖 1: 各種時間複雜度的比較*
-
 ### 實測時間分析
 
 #### 最壞情況時間分析（單位：毫秒）
@@ -226,28 +216,6 @@ double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
 | 4000 | 21.2019 | 1.1314 | 17.6809 | 0.6768 | 18.2585 |
 | 5000 | 30.4068 | 1.0143 | 15.6684 | 0.5399 | 24.6045 |
 
-```
-Sorting Algorithm Time Complexity - Worst Case
-   ^
-   |
-30 +                                      *
-   |                                                 *
-   |                               *
-20 +                                                         *
-   |                         *
-   |              *                    *        
-10 +        *                                *
-   |   *                                             
-   |*       *        *        *        *        *
- 0 +---+------+------+------+------+------+-->
-     500    1000    2000    3000    4000    5000
-
-   * Insertion Sort --*-- Merge Sort
-   * Quick Sort      --*-- Heap Sort
-```
-
-*圖 2: 最壞情況下各排序算法的執行時間比較*
-
 #### 平均情況時間分析（單位：毫秒）
 
 | Size | Insertion Sort | Quick Sort | Merge Sort | Heap Sort | Composite Sort |
@@ -259,28 +227,6 @@ Sorting Algorithm Time Complexity - Worst Case
 | 4000 | 7.06719 | 0.606083 | 9.00245 | 0.492756 | 0.622332 |
 | 5000 | 10.9987 | 0.779912 | 11.2576 | 0.631728 | 0.807842 |
 
-```
-Sorting Algorithm Time Complexity - Average Case
-   ^
-   |
-11 +                                            ** 
-   |                                      **
-   |                                 **
- 8 +                            *
-   |                       *
-   |                  *
- 4 +             *
-   |         *                *    *    *    *
-   |    *   *    *    *    *
- 0 +---+------+------+------+------+------+-->
-     500    1000    2000    3000    4000    5000
-
-   * Insertion Sort --*-- Merge Sort
-   * Quick Sort      --*-- Heap Sort
-```
-
-*圖 3: 平均情況下各排序算法的執行時間比較*
-
 ### 空間複雜度分析（單位：KB）
 
 | Size | Insertion | Quick | Merge | Heap | Composite (Worst) | Composite (Avg) |
@@ -291,29 +237,6 @@ Sorting Algorithm Time Complexity - Average Case
 | 3000 | 11.7227 | 11.8477 | 23.4375 | 11.7266 | 23.4375 | 11.8477 |
 | 4000 | 15.6289 | 15.7539 | 31.25 | 15.6328 | 31.25 | 15.7539 |
 | 5000 | 19.5352 | 19.6719 | 39.0625 | 19.5391 | 39.0625 | 19.6719 |
-
-```
-Memory Usage Comparison (KB)
-   ^
-40 +                                            *
-   |                                      *
-   |                                *
-30 +                          *
-   |                    *
-   |              *
-20 +                                            +
-   |                                      +
-   |                                +
-10 +                          +
-   |                    +
-   |              +     o     o     o     o     o
- 0 +---+------+------+------+------+------+-->
-     500    1000    2000    3000    4000    5000
-
-   o Insertion Sort  + Quick Sort  * Merge Sort
-```
-
-*圖 4: 各排序算法的記憶體使用比較*
 
 ## 測試與驗證
 
@@ -363,30 +286,6 @@ Memory Usage Comparison (KB)
 | 3000 | Heap Sort (1.169 ms) | Heap Sort (0.354 ms) |
 | 4000 | Heap Sort (0.677 ms) | Heap Sort (0.493 ms) |
 | 5000 | Heap Sort (0.540 ms) | Heap Sort (0.632 ms) |
-
-```
-Performance Comparison by Input Size (Average Case)
-   ^
-   |
-0.8 +                                       Q H C
-   |                                  Q
-   |                             Q    H
-0.6 +                             H    C
-   |                        Q
-   |                   Q    H    C
-0.4 +                   H
-   |              Q    C
-   |         Q    H
-0.2 +         H    C
-   |    Q    C
-   |    H
-0.0 +---+------+------+------+------+------+-->
-     500    1000    2000    3000    4000    5000
-
-   Q: Quick Sort   H: Heap Sort   C: Composite Sort
-```
-
-*圖 5: 平均情況下最快三種排序算法的執行時間比較*
 
 從上表可以看出，Heap Sort 在幾乎所有情況下都表現最佳。這可能是由於其穩定的 O(n log n) 時間複雜度和 O(1) 的額外空間需求，以及良好的實際實作效率。
 
