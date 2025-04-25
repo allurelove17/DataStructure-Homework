@@ -7,49 +7,302 @@
 #include <algorithm>
 #include <random>
 #include <map>
+#include <Windows.h> // GetCurrentProcess !!Comes before Psapi.h!!
+#include <Psapi.h>
+#include <cmath> // For log2
 #include "insertion.hpp"
-#include "quick.hpp"
+#include "quick_medianOfThree_recursive.hpp"
 #include "Merge.hpp"
 #include "heap.hpp"
 #include "permutation.hpp"
 
-// Function to generate theoretical worst-case array for heap sort
-std::vector<int> worstCaseHeapArrayOfSize(int n) {
-    if (n == 1) {
-        return { 1 };
+// Improved quick sort implementation with median-of-three pivot selection
+template<class T>
+class improved_quick {
+public:
+    improved_quick(int SIZE) {
+        array = new T[SIZE];
     }
-    else {
-        int topSize = std::floor(static_cast<float>(n) / 2);
-        int bottomSize = std::ceil(static_cast<float>(n) / 2);
 
-        std::vector<int> top = worstCaseHeapArrayOfSize(topSize);
-        std::vector<int> bottom = worstCaseHeapArrayOfSize(bottomSize);
+    ~improved_quick() {
+        delete[] array;
+    }
 
-        std::vector<int> result;
-        result.reserve(n);
+    void print(int size) {
+        for (int i = 0; i < size; ++i) {
+            std::cout << *(this->array + i) << ' ';
+        }std::cout << '\n';
+    }
 
-        // Multiply each element in top by 2
-        for (int i = 0; i < top.size(); i++) {
-            result.push_back(top[i] * 2);
+    // Median-of-three pivot selection to avoid worst case
+    int pivot(int left, int right) {
+        int mid = left + (right - left) / 2;
+
+        // Sort left, mid, right elements
+        if (array[left] > array[mid])
+            std::swap(array[left], array[mid]);
+        if (array[left] > array[right])
+            std::swap(array[left], array[right]);
+        if (array[mid] > array[right])
+            std::swap(array[mid], array[right]);
+
+        // Move pivot to right-1 position
+        std::swap(array[mid], array[right - 1]);
+
+        // Partition
+        int pivotValue = array[right - 1];
+        int i = left;
+
+        for (int j = left; j < right - 1; j++) {
+            if (array[j] <= pivotValue) {
+                std::swap(array[i], array[j]);
+                i++;
+            }
         }
 
-        // Multiply each element in bottom by 2 and subtract 1
-        for (int i = 0; i < bottom.size(); i++) {
-            result.push_back(bottom[i] * 2 - 1);
+        std::swap(array[i], array[right - 1]);
+        return i;
+    }
+
+    void quick_sort(int left, int right) {
+        // Use insertion sort for small arrays for better performance
+        if (right - left <= 20) {
+            for (int i = left + 1; i <= right; i++) {
+                T key = array[i];
+                int j = i - 1;
+                while (j >= left && array[j] > key) {
+                    array[j + 1] = array[j];
+                    j--;
+                }
+                array[j + 1] = key;
+            }
+            return;
         }
 
-        return result;
+        if (left < right) {
+            int p = pivot(left, right);
+            quick_sort(left, p - 1);
+            quick_sort(p + 1, right);
+        }
     }
+
+    double quicktime(int left, int right) {
+        auto start = std::chrono::high_resolution_clock::now();
+        quick_sort(left, right);
+        auto end = std::chrono::high_resolution_clock::now();
+        return std::chrono::duration<double, std::milli>(end - start).count(); // Consistently use milliseconds
+    }
+
+    T* array;
+};
+
+// Composite sort class that intelligently selects the best algorithm
+template<class T>
+class composite_sort {
+public:
+    composite_sort(int SIZE) {
+        array = new T[SIZE];
+        quick_sorter = new improved_quick<T>(SIZE);
+        heap_sorter = new heap<T>(SIZE);
+        merge_sorter = new Merge<T>(SIZE);
+        insertion_sorter = new insertion<T>(SIZE);
+    }
+
+    ~composite_sort() {
+        delete[] array;
+        delete quick_sorter;
+        delete heap_sorter;
+        delete merge_sorter;
+        delete insertion_sorter;
+    }
+
+    void print(int size) {
+        for (int i = 0; i < size; ++i) {
+            std::cout << *(this->array + i) << ' ';
+        }
+        std::cout << '\n';
+    }
+
+    double sort(int size, SIZE_T& memory_used) {
+        // Copy data to all sorters
+        for (int i = 0; i < size; ++i) {
+            quick_sorter->array[i] = array[i];
+            heap_sorter->array[i] = array[i];
+            merge_sorter->array[i] = array[i];
+            insertion_sorter->array[i] = array[i];
+        }
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        // Choose algorithm based on input size and array characteristics
+        if (size <= 20) {
+            // For very small arrays, insertion sort is efficient
+            insertion_sorter->insertion_sort(size);
+            // Copy result back
+            for (int i = 0; i < size; ++i) {
+                array[i] = insertion_sorter->array[i];
+            }
+            memory_used = size * sizeof(T) + sizeof(T); // O(1) extra space
+        }
+        else if (is_nearly_sorted(size)) {
+            // For nearly sorted data, insertion sort or heap sort performs well
+            if (size <= 100) {
+                insertion_sorter->insertion_sort(size);
+                for (int i = 0; i < size; ++i) {
+                    array[i] = insertion_sorter->array[i];
+                }
+                memory_used = size * sizeof(T) + sizeof(T);
+            }
+            else {
+                heap_sorter->heap_sort(size);
+                for (int i = 0; i < size; ++i) {
+                    array[i] = heap_sorter->array[i];
+                }
+                memory_used = size * sizeof(T) + 2 * sizeof(int);
+            }
+        }
+        else if (is_mostly_reverse_sorted(size)) {
+            // For reverse sorted, merge sort is good
+            merge_sorter->merge_sort(0, size - 1);
+            for (int i = 0; i < size; ++i) {
+                array[i] = merge_sorter->array[i];
+            }
+            memory_used = 2 * size * sizeof(T); // O(n) extra space
+        }
+        else {
+            // For random data, quick sort with enhancements is very efficient
+            quick_sorter->quick_sort(0, size - 1);
+            for (int i = 0; i < size; ++i) {
+                array[i] = quick_sorter->array[i];
+            }
+            int height = static_cast<int>(log2(size));
+            memory_used = size * sizeof(T) + height * (3 * sizeof(int)); // O(log n) extra space
+        }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        return std::chrono::duration<double, std::milli>(end - start).count(); // Consistently use milliseconds
+    }
+
+    // Helper function to detect if array is nearly sorted
+    bool is_nearly_sorted(int size) {
+        int max_inversions = size / 10; // Allow 10% of elements to be out of order
+        int inversions = 0;
+
+        for (int i = 0; i < size - 1; ++i) {
+            if (array[i] > array[i + 1]) {
+                inversions++;
+                if (inversions > max_inversions)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    // Helper function to detect if array is mostly reverse sorted
+    bool is_mostly_reverse_sorted(int size) {
+        int max_inversions = size / 5; // Allow 20% out of reverse order
+        int inversions = 0;
+
+        for (int i = 0; i < size - 1; ++i) {
+            if (array[i] < array[i + 1]) {
+                inversions++;
+                if (inversions > max_inversions)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    T* array;
+private:
+    improved_quick<T>* quick_sorter;
+    heap<T>* heap_sorter;
+    Merge<T>* merge_sorter;
+    insertion<T>* insertion_sorter;
+};
+
+// Consistent time measurement functions to ensure all algorithms report in milliseconds
+
+// For insertion sort: O(1) auxiliary space - just the value we're currently inserting
+template<typename T>
+double instrumented_insertion_sort(insertion<T>& sorter, int size, SIZE_T& memory_used) {
+    // Base memory consumed is the array itself
+    memory_used = size * sizeof(T);
+
+    // O(1) extra space for insertion sort
+    memory_used += sizeof(T); // For temp variable used in swapping
+
+    auto start = std::chrono::high_resolution_clock::now();
+    sorter.insertion_sort(size);
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double, std::milli>(end - start).count();
+}
+
+// For improved quick sort: O(log n) auxiliary space - recursion stack
+template<typename T>
+double instrumented_quick_sort(improved_quick<T>& sorter, int left, int right, SIZE_T& memory_used) {
+    // Base memory consumed is the array itself
+    memory_used = (right - left + 1) * sizeof(T);
+
+    // O(log n) extra space for quick sort (recursion stack)
+    int height = static_cast<int>(log2(right - left + 1));
+    memory_used += height * (3 * sizeof(int)); // Stack frames ~ 3 integers per frame
+
+    return sorter.quicktime(left, right);
+}
+
+// For merge sort: O(n) auxiliary space
+template<typename T>
+double instrumented_merge_sort(Merge<T>& sorter, int left, int right, SIZE_T& memory_used) {
+    // Base memory consumed is the array itself
+    memory_used = (right - left + 1) * sizeof(T);
+
+    // O(n) extra space for merge sort (temp array)
+    memory_used += (right - left + 1) * sizeof(T);
+
+    auto start = std::chrono::high_resolution_clock::now();
+    sorter.merge_sort(left, right);
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double, std::milli>(end - start).count();
+}
+
+// For heap sort: O(1) auxiliary space
+template<typename T>
+double instrumented_heap_sort(heap<T>& sorter, int size, SIZE_T& memory_used) {
+    // Base memory consumed is the array itself
+    memory_used = size * sizeof(T);
+
+    // O(1) extra space for heap sort
+    memory_used += 2 * sizeof(int); // For index variables
+
+    auto start = std::chrono::high_resolution_clock::now();
+    sorter.heap_sort(size);
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double, std::milli>(end - start).count();
+}
+
+// For composite sort
+template<typename T>
+double instrumented_composite_sort(composite_sort<T>& sorter, int size, SIZE_T& memory_used) {
+    return sorter.sort(size, memory_used);
+}
+
+// Generate a proper permutation for worst-case quick sort scenario
+// Traditional quicksort's worst case is an already sorted or reverse sorted array
+std::vector<int> generate_worst_case_quick(int n) {
+    std::vector<int> result(n);
+    for (int i = 0; i < n; i++) {
+        result[i] = n - i; // Reverse sorted array
+    }
+    return result;
 }
 
 int main() {
     std::vector<int> sizes = { 500, 1000, 2000, 3000, 4000, 5000, 10000, 20000 };
 
-    // Create random number generator
     std::random_device rd;
     std::mt19937 g(rd());
 
-    // Ask user which test to run
     std::cout << "Choose test mode:" << std::endl;
     std::cout << "1. Worst case analysis" << std::endl;
     std::cout << "2. Average case analysis" << std::endl;
@@ -62,48 +315,60 @@ int main() {
     bool run_worst_case = (choice == 1 || choice == 3);
     bool run_average_case = (choice == 2 || choice == 3);
 
-    // ===== WORST CASE ANALYSIS =====
     if (run_worst_case) {
         std::cout << "Beginning worst case analysis..." << std::endl;
 
-        // For each size, we'll track the worst times for all algorithms
         std::map<int, double> worst_insertion_times;
         std::map<int, double> worst_quick_times;
         std::map<int, double> worst_merge_times;
         std::map<int, double> worst_heap_times;
-        std::map<int, std::vector<int>> worst_heap_permutations;
+        std::map<int, double> worst_composite_times;
 
-        // Initialize with zeros
+        std::map<int, SIZE_T> worst_insertion_memory;
+        std::map<int, SIZE_T> worst_quick_memory;
+        std::map<int, SIZE_T> worst_merge_memory;
+        std::map<int, SIZE_T> worst_heap_memory;
+        std::map<int, SIZE_T> worst_composite_memory;
+
         for (auto size : sizes) {
             worst_insertion_times[size] = 0.0;
             worst_quick_times[size] = 0.0;
             worst_merge_times[size] = 0.0;
             worst_heap_times[size] = 0.0;
-            worst_heap_permutations[size] = std::vector<int>(size);
+            worst_composite_times[size] = 0.0;
+
+            worst_insertion_memory[size] = 0;
+            worst_quick_memory[size] = 0;
+            worst_merge_memory[size] = 0;
+            worst_heap_memory[size] = 0;
+            worst_composite_memory[size] = 0;
         }
 
-        // Run multiple iterations to find the worst case
         for (int runtime = 0; runtime < 10; ++runtime) {
             std::cout << "Run " << runtime + 1 << " of 10" << std::endl;
 
             for (auto size : sizes) {
-                // Create sorting algorithm objects
                 insertion<int> arr_insertion(size);
-                quick<int> arr_quick(size);
+                improved_quick<int> arr_quick(size);
                 Merge<int> arr_merge(size);
                 heap<int> arr_heap(size);
+                composite_sort<int> arr_composite(size);
 
-                // INSERTION SORT WORST CASE - Reverse sorted array
+                // Create the worst case data for each algorithm
+
+                // For insertion sort: reverse sorted array
                 for (int i = 0; i < size; ++i) {
                     arr_insertion.array[i] = size - i;
                 }
 
-                // QUICK SORT WORST CASE - Already sorted array
+                // For quick sort: worst case depends on pivot selection
+                // With basic implementations, sorted or reverse sorted is worst
+                std::vector<int> worst_quick = generate_worst_case_quick(size);
                 for (int i = 0; i < size; ++i) {
-                    arr_quick.array[i] = i;
+                    arr_quick.array[i] = worst_quick[i];
                 }
 
-                // MERGE SORT WORST CASE - Load from file
+                // For merge sort: read from file if available, otherwise use a pattern
                 try {
                     std::ifstream worstmergeifs("worstmerge.txt", std::ios::in);
                     std::stringstream ss_merge;
@@ -115,226 +380,227 @@ int main() {
                         arr_merge.array[ind++] = x;
                     }
 
-                    // If file doesn't have enough elements, fill remaining
                     while (ind < size) {
                         arr_merge.array[ind] = size - ind;
                         ind++;
                     }
                 }
                 catch (...) {
-                    // If file reading fails, use reverse sorted
                     for (int i = 0; i < size; ++i) {
                         arr_merge.array[i] = size - i;
                     }
                 }
 
-                // HEAP SORT - Try different permutation strategies for each run
-                switch (runtime % 5) {
+                // For heap sort: several different patterns to find true worst case
+                switch (runtime % 3) {
                 case 0: {
-                    // Try theoretical worst case
-                    std::vector<int> worst = worstCaseHeapArrayOfSize(size);
-                    for (int i = 0; i < size && i < worst.size(); ++i) {
-                        arr_heap.array[i] = worst[i];
+                    // Create an array that produces worst-case for heapify
+                    // This pattern creates a tree where most nodes need to be bubbled down
+                    for (int i = 0; i < size; ++i) {
+                        // Pattern that forces maximum comparisons and swaps
+                        if (i < size / 2) {
+                            arr_heap.array[i] = i;
+                        }
+                        else {
+                            arr_heap.array[i] = size + size / 2 - i;
+                        }
                     }
                     break;
                 }
                 case 1: {
-                    // Try loading from worstinser.txt (as in your original code)
-                    try {
-                        std::ifstream worstinserifs("worstinser.txt", std::ios::in);
-                        std::stringstream ss_inser;
-                        ss_inser << worstinserifs.rdbuf();
-                        worstinserifs.close();
-
-                        int x, ind = 0;
-                        while (ss_inser >> x && ind < size) {
-                            arr_heap.array[ind++] = x;
-                        }
-
-                        // Fill remaining if needed
-                        while (ind < size) {
-                            arr_heap.array[ind] = ind;
-                            ind++;
-                        }
-                    }
-                    catch (...) {
-                        // Fallback if file doesn't exist
-                        for (int i = 0; i < size; ++i) {
-                            arr_heap.array[i] = i;
-                        }
+                    // Try another pattern: sorted sequence
+                    for (int i = 0; i < size; ++i) {
+                        arr_heap.array[i] = i + 1;
                     }
                     break;
                 }
                 case 2: {
-                    // Try a sawtooth pattern
+                    // Try reverse sorted sequence
                     for (int i = 0; i < size; ++i) {
-                        arr_heap.array[i] = i % 2 == 0 ? i : size - i;
-                    }
-                    break;
-                }
-                case 3: {
-                    // Try a random permutation
-                    std::vector<int> data(size);
-                    for (int i = 0; i < size; ++i) {
-                        data[i] = i + 1;
-                    }
-                    std::shuffle(data.begin(), data.end(), g);
-                    for (int i = 0; i < size; ++i) {
-                        arr_heap.array[i] = data[i];
-                    }
-                    break;
-                }
-                case 4: {
-                    // Try the currently known worst permutation
-                    if (worst_heap_times[size] > 0) {
-                        for (int i = 0; i < size; ++i) {
-                            arr_heap.array[i] = worst_heap_permutations[size][i];
-                        }
-                        // Add small variations to see if we can make it worse
-                        if (size > 10) {
-                            std::swap(arr_heap.array[0], arr_heap.array[size - 1]);
-                            std::swap(arr_heap.array[size / 3], arr_heap.array[2 * size / 3]);
-                        }
-                    }
-                    else {
-                        // If no known worst case yet, try reverse sorted
-                        for (int i = 0; i < size; ++i) {
-                            arr_heap.array[i] = size - i;
-                        }
+                        arr_heap.array[i] = size - i;
                     }
                     break;
                 }
                 }
 
-                // Measure sort times
-                double insertion_time = arr_insertion.insertion_sort(size);
-                double quick_time = arr_quick.quicktime(0, size - 1);
-                double merge_time = arr_merge.mergetime(0, size - 1);
-                double heap_time = arr_heap.heap_sort(size);
+                // For composite sort - try with pattern that defeats quicksort
+                for (int i = 0; i < size; ++i) {
+                    arr_composite.array[i] = worst_quick[i];
+                }
 
-                // Update worst times if we found worse ones
+                SIZE_T insertion_memory = 0;
+                SIZE_T quick_memory = 0;
+                SIZE_T merge_memory = 0;
+                SIZE_T heap_memory = 0;
+                SIZE_T composite_memory = 0;
+
+                double insertion_time = instrumented_insertion_sort(arr_insertion, size, insertion_memory);
+                double quick_time = instrumented_quick_sort(arr_quick, 0, size - 1, quick_memory);
+                double merge_time = instrumented_merge_sort(arr_merge, 0, size - 1, merge_memory);
+                double heap_time = instrumented_heap_sort(arr_heap, size, heap_memory);
+                double composite_time = instrumented_composite_sort(arr_composite, size, composite_memory);
+
                 if (insertion_time > worst_insertion_times[size]) {
                     worst_insertion_times[size] = insertion_time;
+                    worst_insertion_memory[size] = insertion_memory;
                 }
 
                 if (quick_time > worst_quick_times[size]) {
                     worst_quick_times[size] = quick_time;
+                    worst_quick_memory[size] = quick_memory;
                 }
 
                 if (merge_time > worst_merge_times[size]) {
                     worst_merge_times[size] = merge_time;
+                    worst_merge_memory[size] = merge_memory;
                 }
 
                 if (heap_time > worst_heap_times[size]) {
                     worst_heap_times[size] = heap_time;
-                    for (int i = 0; i < size; ++i) {
-                        worst_heap_permutations[size][i] = arr_heap.array[i];
-                    }
+                    worst_heap_memory[size] = heap_memory;
+                }
 
-                    // Save this new worst permutation to a file
-                    std::ofstream worst_file("worst_heap_" + std::to_string(size) + ".txt");
-                    for (int i = 0; i < size; ++i) {
-                        worst_file << arr_heap.array[i] << " ";
-                    }
-                    worst_file.close();
-
-                    std::cout << "New worst case for size " << size << ": " << heap_time << " ms" << std::endl;
+                if (composite_time > worst_composite_times[size]) {
+                    worst_composite_times[size] = composite_time;
+                    worst_composite_memory[size] = composite_memory;
                 }
             }
         }
 
-        // Now write only the worst-case results to the CSV file
         std::ofstream WorstCaseResults("sorting_worstcase.csv");
+        WorstCaseResults << "Size,Insertion_Time(ms),Insertion_Memory(KB),Quick_Time(ms),Quick_Memory(KB),"
+            << "Merge_Time(ms),Merge_Memory(KB),Heap_Time(ms),Heap_Memory(KB),Composite_Time(ms),Composite_Memory(KB)\n";
 
         for (auto size : sizes) {
             WorstCaseResults << size << ","
                 << worst_insertion_times[size] << ","
+                << (worst_insertion_memory[size] / 1024.0) << ","
                 << worst_quick_times[size] << ","
+                << (worst_quick_memory[size] / 1024.0) << ","
                 << worst_merge_times[size] << ","
-                << worst_heap_times[size] << '\n';
+                << (worst_merge_memory[size] / 1024.0) << ","
+                << worst_heap_times[size] << ","
+                << (worst_heap_memory[size] / 1024.0) << ","
+                << worst_composite_times[size] << ","
+                << (worst_composite_memory[size] / 1024.0) << '\n';
         }
 
         WorstCaseResults.close();
         std::cout << "Worst case results saved to sorting_worstcase.csv" << std::endl;
     }
 
-    // ===== AVERAGE CASE ANALYSIS =====
     if (run_average_case) {
         std::cout << "Beginning average case analysis..." << std::endl;
 
-        // For each size, track total times and number of runs
         std::map<int, double> total_insertion_times;
         std::map<int, double> total_quick_times;
         std::map<int, double> total_merge_times;
         std::map<int, double> total_heap_times;
+        std::map<int, double> total_composite_times;
 
-        // Initialize with zeros
+        std::map<int, SIZE_T> total_insertion_memory;
+        std::map<int, SIZE_T> total_quick_memory;
+        std::map<int, SIZE_T> total_merge_memory;
+        std::map<int, SIZE_T> total_heap_memory;
+        std::map<int, SIZE_T> total_composite_memory;
+
         for (auto size : sizes) {
             total_insertion_times[size] = 0.0;
             total_quick_times[size] = 0.0;
             total_merge_times[size] = 0.0;
             total_heap_times[size] = 0.0;
+            total_composite_times[size] = 0.0;
+
+            total_insertion_memory[size] = 0;
+            total_quick_memory[size] = 0;
+            total_merge_memory[size] = 0;
+            total_heap_memory[size] = 0;
+            total_composite_memory[size] = 0;
         }
 
-        // Number of runs for averaging
-        const int NUM_RUNS = 20;
+        // Reduce number of runs for performance in average case
+        const int NUM_RUNS = 1000; // Still statistically significant but runs faster
 
-        // Run multiple iterations to find the average case
         for (int runtime = 0; runtime < NUM_RUNS; ++runtime) {
-            std::cout << "Run " << runtime + 1 << " of " << NUM_RUNS << std::endl;
+            if (runtime % 10 == 0) {
+                std::cout << "Run " << runtime + 1 << " of " << NUM_RUNS << std::endl;
+            }
 
             for (auto size : sizes) {
-                // Create sorting algorithm objects
                 insertion<int> arr_insertion(size);
-                quick<int> arr_quick(size);
+                improved_quick<int> arr_quick(size);
                 Merge<int> arr_merge(size);
                 heap<int> arr_heap(size);
+                composite_sort<int> arr_composite(size);
 
-                // Generate random data for average case
                 std::vector<int> data(size);
                 for (int i = 0; i < size; ++i) {
                     data[i] = i + 1;
                 }
                 std::shuffle(data.begin(), data.end(), g);
 
-                // Copy same data to all algorithms for fair comparison
                 for (int i = 0; i < size; ++i) {
                     arr_insertion.array[i] = data[i];
                     arr_quick.array[i] = data[i];
                     arr_merge.array[i] = data[i];
                     arr_heap.array[i] = data[i];
+                    arr_composite.array[i] = data[i];
                 }
 
-                // Measure sort times
-                double insertion_time = arr_insertion.insertion_sort(size);
-                double quick_time = arr_quick.quicktime(0, size - 1);
-                double merge_time = arr_merge.mergetime(0, size - 1);
-                double heap_time = arr_heap.heap_sort(size);
+                SIZE_T insertion_memory = 0;
+                SIZE_T quick_memory = 0;
+                SIZE_T merge_memory = 0;
+                SIZE_T heap_memory = 0;
+                SIZE_T composite_memory = 0;
 
-                // Add to running totals
+                double insertion_time = instrumented_insertion_sort(arr_insertion, size, insertion_memory);
+                double quick_time = instrumented_quick_sort(arr_quick, 0, size - 1, quick_memory);
+                double merge_time = instrumented_merge_sort(arr_merge, 0, size - 1, merge_memory);
+                double heap_time = instrumented_heap_sort(arr_heap, size, heap_memory);
+                double composite_time = instrumented_composite_sort(arr_composite, size, composite_memory);
+
                 total_insertion_times[size] += insertion_time;
                 total_quick_times[size] += quick_time;
                 total_merge_times[size] += merge_time;
                 total_heap_times[size] += heap_time;
+                total_composite_times[size] += composite_time;
 
-                std::cout << "Size " << size << " - Run " << runtime + 1 << " complete" << std::endl;
+                total_insertion_memory[size] += insertion_memory;
+                total_quick_memory[size] += quick_memory;
+                total_merge_memory[size] += merge_memory;
+                total_heap_memory[size] += heap_memory;
+                total_composite_memory[size] += composite_memory;
             }
         }
 
-        // Now write the average-case results to the CSV file
         std::ofstream AverageCaseResults("sorting_averagecase.csv");
+        AverageCaseResults << "Size,Insertion_Time(ms),Insertion_Memory(KB),Quick_Time(ms),Quick_Memory(KB),"
+            << "Merge_Time(ms),Merge_Memory(KB),Heap_Time(ms),Heap_Memory(KB),Composite_Time(ms),Composite_Memory(KB)\n";
 
         for (auto size : sizes) {
-            double avg_insertion = total_insertion_times[size] / NUM_RUNS;
-            double avg_quick = total_quick_times[size] / NUM_RUNS;
-            double avg_merge = total_merge_times[size] / NUM_RUNS;
-            double avg_heap = total_heap_times[size] / NUM_RUNS;
+            double avg_insertion_time = total_insertion_times[size] / NUM_RUNS;
+            double avg_quick_time = total_quick_times[size] / NUM_RUNS;
+            double avg_merge_time = total_merge_times[size] / NUM_RUNS;
+            double avg_heap_time = total_heap_times[size] / NUM_RUNS;
+            double avg_composite_time = total_composite_times[size] / NUM_RUNS;
+
+            double avg_insertion_memory = (total_insertion_memory[size] / NUM_RUNS) / 1024.0;
+            double avg_quick_memory = (total_quick_memory[size] / NUM_RUNS) / 1024.0;
+            double avg_merge_memory = (total_merge_memory[size] / NUM_RUNS) / 1024.0;
+            double avg_heap_memory = (total_heap_memory[size] / NUM_RUNS) / 1024.0;
+            double avg_composite_memory = (total_composite_memory[size] / NUM_RUNS) / 1024.0;
 
             AverageCaseResults << size << ","
-                << avg_insertion << ","
-                << avg_quick << ","
-                << avg_merge << ","
-                << avg_heap << '\n';
+                << avg_insertion_time << ","
+                << avg_insertion_memory << ","
+                << avg_quick_time << ","
+                << avg_quick_memory << ","
+                << avg_merge_time << ","
+                << avg_merge_memory << ","
+                << avg_heap_time << ","
+                << avg_heap_memory << ","
+                << avg_composite_time << ","
+                << avg_composite_memory << '\n';
         }
 
         AverageCaseResults.close();

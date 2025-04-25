@@ -12,6 +12,10 @@ public:
 	heap(int SIZE) {
 		array = new T[SIZE + 1];
 	}
+
+	/*~heap() {
+		delete []array;
+	}*/
 	
 	void maxheap(int root, int length) {
 		int left = 2 * root, right = 2 * root + 1, max;
@@ -37,7 +41,7 @@ public:
 	}
 
 	double heap_sort(int size) {
-		auto start = std::chrono::steady_clock::now();
+		auto start = std::chrono::high_resolution_clock::now();
 		T c;
 		//*(this->array) = 0;
 		for (int i = size + 1; i > 0; --i) {
@@ -58,8 +62,9 @@ public:
 		for (int i = 0; i < size; i++) {
 			*(this->array + i) = *(this->array + i + 1);
 		}
-		auto end = std::chrono::steady_clock::now();
-		return std::chrono::duration<double, std::milli>(end - start).count();
+		auto end = std::chrono::high_resolution_clock::now();
+		// return std::chrono::duration<double, std::milli>(end - start).count();
+		return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 	}
 
 	void print(int size) {

@@ -12,8 +12,12 @@ public:
 		array = new T[SIZE];
 	}
 
+	/*~insertion() {
+		delete []array;
+	}*/
+
 	double insertion_sort(int size) {
-		auto start = std::chrono::steady_clock::now();
+		auto start = std::chrono::high_resolution_clock::now();
 		for (int i = 1; i < size; ++i) {
 			int value = *(this->array + i), j;
 			for (j = i - 1; j >= 0 && value < *(this->array + j); --j) {
@@ -22,8 +26,10 @@ public:
 			}
 			*(this->array + j + 1) = value;
 		}
-		auto end = std::chrono::steady_clock::now();
-		return std::chrono::duration<double, std::milli>(end - start).count();
+		auto end = std::chrono::high_resolution_clock::now();
+		// return std::chrono::duration<double, std::micro>(end - start).count();
+		return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+		// duration_cast: time type switch -f
 	}
 
 	void print(int size) {
