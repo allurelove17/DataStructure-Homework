@@ -12,8 +12,6 @@
 - 找出在各種情況下最適合的排序算法，並據此實作一個複合型排序函式（Composite Sort）
 - 記錄和分析各算法在不同輸入規模下的表現，用圖表呈現結果
 
-## 實驗方法
-
 ### 測試資料產生
 
 1. **最壞情況 (Worst Case)**
@@ -191,62 +189,86 @@ void heap_sort(int size) {
 ### Composite Sort
 
 ```cpp
-template<class T>
-double composite_sort<T>::sort(int size, SIZE_T& memory_used) {
-    // Copy data to all sorters
-    for (int i = 0; i < size; ++i) {
-        quick_sorter->array[i] = array[i];
-        heap_sorter->array[i] = array[i];
-        merge_sorter->array[i] = array[i];
-        insertion_sorter->array[i] = array[i];
+double sort(int size, SIZE_T& memory_used) {
+        for (int i = 0; i < size; ++i) {
+            quick_sorter->array[i] = array[i];
+            heap_sorter->array[i] = array[i];
+            merge_sorter->array[i] = array[i];
+            insertion_sorter->array[i] = array[i];
+        }
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        if (size <= 20) {
+            insertion_sorter->insertion_sort(size);
+            for (int i = 0; i < size; ++i) {
+                array[i] = insertion_sorter->array[i];
+            }
+            memory_used = size * sizeof(T) + sizeof(T);
+        }
+        else if (is_nearly_sorted(size)) {
+            if (size <= 100) {
+                insertion_sorter->insertion_sort(size);
+                for (int i = 0; i < size; ++i) {
+                    array[i] = insertion_sorter->array[i];
+                }
+                memory_used = size * sizeof(T) + sizeof(T);
+            }
+            else {
+                heap_sorter->heap_sort(size);
+                for (int i = 0; i < size; ++i) {
+                    array[i] = heap_sorter->array[i];
+                }
+                memory_used = size * sizeof(T) + 2 * sizeof(int);
+            }
+        }
+        else if (is_mostly_reverse_sorted(size)) {
+            merge_sorter->merge_sort(0, size - 1);
+            for (int i = 0; i < size; ++i) {
+                array[i] = merge_sorter->array[i];
+            }
+            memory_used = 2 * size * sizeof(T);
+        }
+        else {
+            quick_sorter->quick_sort(0, size - 1);
+            for (int i = 0; i < size; ++i) {
+                array[i] = quick_sorter->array[i];
+            }
+            int height = static_cast<int>(log2(size));
+            memory_used = size * sizeof(T) + height * (3 * sizeof(int));
+        }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        return std::chrono::duration<double, std::milli>(end - start).count();
     }
 
-    auto start = std::chrono::steady_clock::now();
+    bool is_nearly_sorted(int size) {
+        int max_inversions = size / 10;
+        int inversions = 0;
 
-    // Choose algorithm based on input size and array characteristics
-    if (size <= 20) {
-        // For very small arrays, insertion sort is efficient
-        insertion_sorter->insertion_sort(size);
-        // Copy result back
-        for (int i = 0; i < size; ++i) {
-            array[i] = insertion_sorter->array[i];
+        for (int i = 0; i < size - 1; ++i) {
+            if (array[i] > array[i + 1]) {
+                inversions++;
+                if (inversions > max_inversions)
+                    return false;
+            }
         }
-        memory_used = size * sizeof(T) + sizeof(T); // O(1) extra space
-    }
-    else if (is_nearly_sorted(size)) {
-        // For nearly sorted data, heap sort performs well
-        heap_sorter->heap_sort(size);
-        // Copy result back
-        for (int i = 0; i < size; ++i) {
-            array[i] = heap_sorter->array[i];
-        }
-        memory_used = size * sizeof(T) + 2 * sizeof(int); // O(1) extra space
-    }
-    else if (size <= 1000) {
-        // For moderate size arrays, quick sort is very efficient
-        quick_sorter->quick_sort(0, size - 1);
-        // Copy result back
-        for (int i = 0; i < size; ++i) {
-            array[i] = quick_sorter->array[i];
-        }
-        int height = static_cast<int>(log2(size));
-        memory_used = size * sizeof(T) + height * (3 * sizeof(int)); // O(log n) extra space
-    }
-    else {
-        // For large arrays, select based on your performance data
-        // Based on your data, quick sort is generally fastest
-        quick_sorter->quick_sort(0, size - 1);
-        // Copy result back
-        for (int i = 0; i < size; ++i) {
-            array[i] = quick_sorter->array[i];
-        }
-        int height = static_cast<int>(log2(size));
-        memory_used = size * sizeof(T) + height * (3 * sizeof(int)); // O(log n) extra space
+        return true;
     }
 
-    auto end = std::chrono::steady_clock::now();
-    return std::chrono::duration<double, std::milli>(end - start).count();
-}
+    bool is_mostly_reverse_sorted(int size) {
+        int max_inversions = size / 5;
+        int inversions = 0;
+
+        for (int i = 0; i < size - 1; ++i) {
+            if (array[i] < array[i + 1]) {
+                inversions++;
+                if (inversions > max_inversions)
+                    return false;
+            }
+        }
+        return true;
+    }
 ```
 
 ## 效能分析
