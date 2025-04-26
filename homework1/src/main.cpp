@@ -9,14 +9,13 @@
 #include <map>
 #include <Windows.h> // GetCurrentProcess !!Comes before Psapi.h!!
 #include <Psapi.h>
-#include <cmath> // For log2
+#include <cmath>
 #include "insertion.hpp"
 #include "quick_medianOfThree_recursive.hpp"
 #include "Merge.hpp"
 #include "heap.hpp"
 #include "permutation.hpp"
 
-// Improved quick sort implementation with median-of-three pivot selection
 template<class T>
 class improved_quick {
 public:
@@ -34,11 +33,9 @@ public:
         }std::cout << '\n';
     }
 
-    // Median-of-three pivot selection to avoid worst case
     int pivot(int left, int right) {
         int mid = left + (right - left) / 2;
 
-        // Sort left, mid, right elements
         if (array[left] > array[mid])
             std::swap(array[left], array[mid]);
         if (array[left] > array[right])
@@ -46,10 +43,8 @@ public:
         if (array[mid] > array[right])
             std::swap(array[mid], array[right]);
 
-        // Move pivot to right-1 position
         std::swap(array[mid], array[right - 1]);
 
-        // Partition
         int pivotValue = array[right - 1];
         int i = left;
 
@@ -65,7 +60,6 @@ public:
     }
 
     void quick_sort(int left, int right) {
-        // Use insertion sort for small arrays for better performance
         if (right - left <= 20) {
             for (int i = left + 1; i <= right; i++) {
                 T key = array[i];
@@ -90,13 +84,12 @@ public:
         auto start = std::chrono::high_resolution_clock::now();
         quick_sort(left, right);
         auto end = std::chrono::high_resolution_clock::now();
-        return std::chrono::duration<double, std::milli>(end - start).count(); // Consistently use milliseconds
+        return std::chrono::duration<double, std::milli>(end - start).count();
     }
 
     T* array;
 };
 
-// Composite sort class that intelligently selects the best algorithm
 template<class T>
 class composite_sort {
 public:
@@ -124,7 +117,6 @@ public:
     }
 
     double sort(int size, SIZE_T& memory_used) {
-        // Copy data to all sorters
         for (int i = 0; i < size; ++i) {
             quick_sorter->array[i] = array[i];
             heap_sorter->array[i] = array[i];
@@ -134,18 +126,14 @@ public:
 
         auto start = std::chrono::high_resolution_clock::now();
 
-        // Choose algorithm based on input size and array characteristics
         if (size <= 20) {
-            // For very small arrays, insertion sort is efficient
             insertion_sorter->insertion_sort(size);
-            // Copy result back
             for (int i = 0; i < size; ++i) {
                 array[i] = insertion_sorter->array[i];
             }
-            memory_used = size * sizeof(T) + sizeof(T); // O(1) extra space
+            memory_used = size * sizeof(T) + sizeof(T);
         }
         else if (is_nearly_sorted(size)) {
-            // For nearly sorted data, insertion sort or heap sort performs well
             if (size <= 100) {
                 insertion_sorter->insertion_sort(size);
                 for (int i = 0; i < size; ++i) {
@@ -162,30 +150,27 @@ public:
             }
         }
         else if (is_mostly_reverse_sorted(size)) {
-            // For reverse sorted, merge sort is good
             merge_sorter->merge_sort(0, size - 1);
             for (int i = 0; i < size; ++i) {
                 array[i] = merge_sorter->array[i];
             }
-            memory_used = 2 * size * sizeof(T); // O(n) extra space
+            memory_used = 2 * size * sizeof(T);
         }
         else {
-            // For random data, quick sort with enhancements is very efficient
             quick_sorter->quick_sort(0, size - 1);
             for (int i = 0; i < size; ++i) {
                 array[i] = quick_sorter->array[i];
             }
             int height = static_cast<int>(log2(size));
-            memory_used = size * sizeof(T) + height * (3 * sizeof(int)); // O(log n) extra space
+            memory_used = size * sizeof(T) + height * (3 * sizeof(int));
         }
 
         auto end = std::chrono::high_resolution_clock::now();
-        return std::chrono::duration<double, std::milli>(end - start).count(); // Consistently use milliseconds
+        return std::chrono::duration<double, std::milli>(end - start).count();
     }
 
-    // Helper function to detect if array is nearly sorted
     bool is_nearly_sorted(int size) {
-        int max_inversions = size / 10; // Allow 10% of elements to be out of order
+        int max_inversions = size / 10;
         int inversions = 0;
 
         for (int i = 0; i < size - 1; ++i) {
@@ -198,9 +183,8 @@ public:
         return true;
     }
 
-    // Helper function to detect if array is mostly reverse sorted
     bool is_mostly_reverse_sorted(int size) {
-        int max_inversions = size / 5; // Allow 20% out of reverse order
+        int max_inversions = size / 5;
         int inversions = 0;
 
         for (int i = 0; i < size - 1; ++i) {
@@ -221,16 +205,10 @@ private:
     insertion<T>* insertion_sorter;
 };
 
-// Consistent time measurement functions to ensure all algorithms report in milliseconds
-
-// For insertion sort: O(1) auxiliary space - just the value we're currently inserting
 template<typename T>
 double instrumented_insertion_sort(insertion<T>& sorter, int size, SIZE_T& memory_used) {
-    // Base memory consumed is the array itself
     memory_used = size * sizeof(T);
-
-    // O(1) extra space for insertion sort
-    memory_used += sizeof(T); // For temp variable used in swapping
+    memory_used += sizeof(T);
 
     auto start = std::chrono::high_resolution_clock::now();
     sorter.insertion_sort(size);
@@ -238,26 +216,19 @@ double instrumented_insertion_sort(insertion<T>& sorter, int size, SIZE_T& memor
     return std::chrono::duration<double, std::milli>(end - start).count();
 }
 
-// For improved quick sort: O(log n) auxiliary space - recursion stack
 template<typename T>
 double instrumented_quick_sort(improved_quick<T>& sorter, int left, int right, SIZE_T& memory_used) {
-    // Base memory consumed is the array itself
     memory_used = (right - left + 1) * sizeof(T);
 
-    // O(log n) extra space for quick sort (recursion stack)
     int height = static_cast<int>(log2(right - left + 1));
     memory_used += height * (3 * sizeof(int)); // Stack frames ~ 3 integers per frame
 
     return sorter.quicktime(left, right);
 }
 
-// For merge sort: O(n) auxiliary space
 template<typename T>
 double instrumented_merge_sort(Merge<T>& sorter, int left, int right, SIZE_T& memory_used) {
-    // Base memory consumed is the array itself
     memory_used = (right - left + 1) * sizeof(T);
-
-    // O(n) extra space for merge sort (temp array)
     memory_used += (right - left + 1) * sizeof(T);
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -266,14 +237,10 @@ double instrumented_merge_sort(Merge<T>& sorter, int left, int right, SIZE_T& me
     return std::chrono::duration<double, std::milli>(end - start).count();
 }
 
-// For heap sort: O(1) auxiliary space
 template<typename T>
 double instrumented_heap_sort(heap<T>& sorter, int size, SIZE_T& memory_used) {
-    // Base memory consumed is the array itself
     memory_used = size * sizeof(T);
-
-    // O(1) extra space for heap sort
-    memory_used += 2 * sizeof(int); // For index variables
+    memory_used += 2 * sizeof(int);
 
     auto start = std::chrono::high_resolution_clock::now();
     sorter.heap_sort(size);
@@ -281,14 +248,11 @@ double instrumented_heap_sort(heap<T>& sorter, int size, SIZE_T& memory_used) {
     return std::chrono::duration<double, std::milli>(end - start).count();
 }
 
-// For composite sort
 template<typename T>
 double instrumented_composite_sort(composite_sort<T>& sorter, int size, SIZE_T& memory_used) {
     return sorter.sort(size, memory_used);
 }
 
-// Generate a proper permutation for worst-case quick sort scenario
-// Traditional quicksort's worst case is an already sorted or reverse sorted array
 std::vector<int> generate_worst_case_quick(int n) {
     std::vector<int> result(n);
     for (int i = 0; i < n; i++) {
@@ -354,21 +318,15 @@ int main() {
                 heap<int> arr_heap(size);
                 composite_sort<int> arr_composite(size);
 
-                // Create the worst case data for each algorithm
-
-                // For insertion sort: reverse sorted array
                 for (int i = 0; i < size; ++i) {
                     arr_insertion.array[i] = size - i;
                 }
 
-                // For quick sort: worst case depends on pivot selection
-                // With basic implementations, sorted or reverse sorted is worst
                 std::vector<int> worst_quick = generate_worst_case_quick(size);
                 for (int i = 0; i < size; ++i) {
                     arr_quick.array[i] = worst_quick[i];
                 }
 
-                // For merge sort: read from file if available, otherwise use a pattern
                 try {
                     std::ifstream worstmergeifs("worstmerge.txt", std::ios::in);
                     std::stringstream ss_merge;
@@ -391,13 +349,9 @@ int main() {
                     }
                 }
 
-                // For heap sort: several different patterns to find true worst case
                 switch (runtime % 3) {
                 case 0: {
-                    // Create an array that produces worst-case for heapify
-                    // This pattern creates a tree where most nodes need to be bubbled down
                     for (int i = 0; i < size; ++i) {
-                        // Pattern that forces maximum comparisons and swaps
                         if (i < size / 2) {
                             arr_heap.array[i] = i;
                         }
@@ -408,14 +362,12 @@ int main() {
                     break;
                 }
                 case 1: {
-                    // Try another pattern: sorted sequence
                     for (int i = 0; i < size; ++i) {
                         arr_heap.array[i] = i + 1;
                     }
                     break;
                 }
                 case 2: {
-                    // Try reverse sorted sequence
                     for (int i = 0; i < size; ++i) {
                         arr_heap.array[i] = size - i;
                     }
@@ -423,7 +375,6 @@ int main() {
                 }
                 }
 
-                // For composite sort - try with pattern that defeats quicksort
                 for (int i = 0; i < size; ++i) {
                     arr_composite.array[i] = worst_quick[i];
                 }
@@ -518,8 +469,7 @@ int main() {
             total_composite_memory[size] = 0;
         }
 
-        // Reduce number of runs for performance in average case
-        const int NUM_RUNS = 1000; // Still statistically significant but runs faster
+        const int NUM_RUNS = 1000;
 
         for (int runtime = 0; runtime < NUM_RUNS; ++runtime) {
             if (runtime % 10 == 0) {
