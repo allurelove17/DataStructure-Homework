@@ -4,63 +4,101 @@
 #include <algorithm>
 #include <vector>
 #include <chrono>
+#include <Windows.h> // Add these Windows headers
+#include <psapi.h>
 
 template<class T>
 class Merge {
 public:
     Merge(int SIZE) {
         array = new T[SIZE];
+        temp_array = new T[SIZE];
     }
 
-    /*~Merge() {
-        delete []array;
-    }*/
+    ~Merge() {
+        delete[] array;
+        delete[] temp_array;
+    }
 
-    double mergetime(int left, int right) {
+    void getMemoryUsage(SIZE_T& workingSetSize) {
+        PROCESS_MEMORY_COUNTERS_EX memInfo;
+        GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&memInfo, sizeof(memInfo));
+        workingSetSize = memInfo.PrivateUsage;
+    }
+
+    double mergetime(int left, int right, SIZE_T& merge_memory) {
+        for (int i = 0; i <= right - left; i++) {
+            temp_array[i] = 0;
+        }
+
+        SIZE_T beforeMemory = 0;
+        getMemoryUsage(beforeMemory);
+
         auto start = std::chrono::high_resolution_clock::now();
         merge_sort(left, right);
         auto end = std::chrono::high_resolution_clock::now();
+
+        SIZE_T afterMemory = 0;
+        getMemoryUsage(afterMemory);
+
+        if (afterMemory <= beforeMemory) {
+            // std::cout << "Calculate Merge Memory Usage.\n";
+            merge_memory = (right - left + 1) * sizeof(T);
+        }
+        else {
+            merge_memory = afterMemory - beforeMemory;
+        }
+
         return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
     }
 
     void merge_sort(int left, int right) {
         int n = right - left + 1;
-
         for (int curr_size = 1; curr_size < n; curr_size *= 2) {
             for (int start = left; start < right; start += 2 * curr_size) {
                 int mid = min(start + curr_size - 1, right);
                 int end = min(start + 2 * curr_size - 1, right);
-
                 merge(start, mid, end);
             }
         }
     }
 
     void merge(int left, int mid, int right) {
-        std::vector<T> leftsub(this->array + left, this->array + mid + 1),
-            rightsub(this->array + mid + 1, this->array + right + 1);
-        leftsub.push_back(INT_MAX);
-        rightsub.push_back(INT_MAX);
-        int left_ind = 0, right_ind = 0;
-        for (int i = left; i <= right; ++i) {
-            if (leftsub[left_ind] <= rightsub[right_ind]) {
-                *(this->array + i) = leftsub[left_ind];
-                left_ind++;
+        for (int i = left; i <= right; i++) {
+            temp_array[i] = array[i];
+        }
+
+        int i = left;
+        int j = mid + 1;
+        int k = left;
+
+        while (i <= mid && j <= right) {
+            if (temp_array[i] <= temp_array[j]) {
+                array[k++] = temp_array[i++];
             }
             else {
-                *(this->array + i) = rightsub[right_ind];
-                right_ind++;
+                array[k++] = temp_array[j++];
             }
+        }
+
+        while (i <= mid) {
+            array[k++] = temp_array[i++];
+        }
+
+        while (j <= right) {
+            array[k++] = temp_array[j++];
         }
     }
 
     void print(int size) {
         for (int i = 0; i < size; ++i) {
             std::cout << *(this->array + i) << ' ';
-        }std::cout << '\n';
+        }
+        std::cout << '\n';
     }
 
     T* array;
 private:
+    T* temp_array;
 };
 #endif

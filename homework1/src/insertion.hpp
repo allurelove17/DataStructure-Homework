@@ -12,9 +12,9 @@ public:
 		array = new T[SIZE];
 	}
 
-	/*~insertion() {
+	~insertion() {
 		delete []array;
-	}*/
+	}
 
 	double insertion_sort(int size) {
 		auto start = std::chrono::high_resolution_clock::now();
