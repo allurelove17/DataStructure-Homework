@@ -58,6 +58,9 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 | 4000 | 6555.64 | 0 | 277.942 | 0.31543 | 345.661 | 15.625 | 462.94 | 0 | 0 | 0 |
 | 5000 | 10191.4 | 0 | 356.078 | 0.326172 | 443.793 | 19.5312 | 585.954 | 0 | 0 | 0 |
 
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/average_time_complexity_chart.png)
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/average_space_complexity_chart.png)
+
 ## Sorting Algorithm Performance - Worst Case
 
 | Size | Insertion_Time(ms) | Insertion_Memory(KB) | Quick_Time(ms) | Quick_Memory(KB) | Merge_Time(ms) | Merge_Memory(KB) | Heap_Time(ms) | Heap_Memory(KB) | Composite_Time(ms) | Composite_Memory(KB) |
@@ -68,6 +71,9 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 | 3000 | 8926 | 0 | 214 | 0.28125 | 138 | 11.7188 | 367 | 0 | 0 | 0 |
 | 4000 | 13286 | 0 | 334 | 0.34375 | 182 | 15.625 | 523 | 0 | 0 | 0 |
 | 5000 | 23264 | 0 | 389 | 0.296875 | 236 | 19.5312 | 704 | 0 | 0 | 0 |
+
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_time_complexity_chart.png)
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_space_complexity_chart.png)
 
 ## 申論及開發報告
 ## 參考資料 // Option
