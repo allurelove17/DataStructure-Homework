@@ -308,27 +308,27 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 ## 測試與驗證
 ## Sorting Algorithm Performance - Average Case
 
-**Time Measurements (ms)**
+**Average Case - Time Measurements (ms)**
 
 | Size | Insertion_Time | Quick_Time | Merge_Time | Heap_Time | Composite_Time |
 | --- | --- | --- | --- | --- | --- |
-| 500 | 0.111346 | 0.027683 | 0.03297 | 0.043724 | 0 |
-| 1000 | 0.422886 | 0.060356 | 0.073554 | 0.095788 | 0 |
-| 2000 | 1.6542 | 0.128793 | 0.157581 | 0.212458 | 0 |
-| 3000 | 3.69154 | 0.201406 | 0.250079 | 0.334839 | 0 |
-| 4000 | 6.55564 | 0.277942 | 0.345661 | 0.46294 | 0 |
-| 5000 | 10.1914 | 0.356078 | 0.443793 | 0.585954 | 0 |
+| 500 | 0.148886 | 0.03787 | 0.045996 | 0.059832 | 0.00004 |
+| 1000 | 0.569704 | 0.07998 | 0.098728 | 0.130326 | 0.00009 |
+| 2000 | 2.22698 | 0.177848 | 0.219547 | 0.29468 | 0.00019 |
+| 3000 | 5.02804 | 0.284464 | 0.354965 | 0.465641 | 0.0003 |
+| 4000 | 9.1213 | 0.399969 | 0.506531 | 0.669826 | 0.00043 |
+| 5000 | 14.1775 | 0.490993 | 0.629315 | 0.81951 | 0.00053 |
 
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/average_time_complexity_chart.png)
 
-**Memory Usage (KB)**
+**Average Case - Memory Usage (KB)**
 
 | Size | Insertion_Memory | Quick_Memory | Merge_Memory | Heap_Memory | Composite_Memory |
 | --- | --- | --- | --- | --- | --- |
-| 500 | 0 | 0.219727 | 1.95312 | 0 | 0 |
+| 500 | 0 | 0.220703 | 1.95312 | 0 | 0 |
 | 1000 | 0 | 0.251953 | 3.90625 | 0 | 0 |
-| 2000 | 0 | 0.28418 | 7.8125 | 0 | 0 |
-| 3000 | 0 | 0.302734 | 11.7188 | 0 | 0 |
+| 2000 | 0 | 0.283203 | 7.8125 | 0 | 0 |
+| 3000 | 0 | 0.303711 | 11.7188 | 0 | 0 |
 | 4000 | 0 | 0.31543 | 15.625 | 0 | 0 |
 | 5000 | 0 | 0.326172 | 19.5312 | 0 | 0 |
 
@@ -336,29 +336,29 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 
 ## Sorting Algorithm Performance - Worst Case
 
-**Time Measurements (ms)**
+**Worst Case - Time Measurements (ms)**
 
 | Size | Insertion_Time | Quick_Time | Merge_Time | Heap_Time | Composite_Time |
 | --- | --- | --- | --- | --- | --- |
-| 500 | 0.3 | 0.034 | 0.028 | 0.054 | 0 |
-| 1000 | 0.838 | 0.072 | 0.045 | 0.14 | 0 |
-| 2000 | 3.172 | 0.161 | 0.089 | 0.252 | 0 |
-| 3000 | 8.926 | 0.214 | 0.138 | 0.367 | 0 |
-| 4000 | 13.286 | 0.334 | 0.182 | 0.523 | 0 |
-| 5000 | 23.264 | 0.389 | 0.236 | 0.704 | 0 |
+| 500 | 0.215 | 0.181 | 0.01698 | 0.062 | 0.0015479 |
+| 1000 | 0.772 | 0.166 | 0.03901 | 0.203 | 0.000198 |
+| 2000 | 4.158 | 0.309 | 0.09277 | 0.443 | 0.0002578 |
+| 3000 | 7.565 | 0.593 | 0.1572 | 0.975 | 0.0007474 |
+| 4000 | 12.597 | 0.718 | 0.19946 | 1.235 | 0.0005692 |
+| 5000 | 19.432 | 1.033 | 0.2502 | 1.484 | 0.0013376 |
 
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_time_complexity_chart.png)
 
-**Memory Usage (KB)**
+**Worst Case - Memory Usage (KB)**
 
 | Size | Insertion_Memory | Quick_Memory | Merge_Memory | Heap_Memory | Composite_Memory |
 | --- | --- | --- | --- | --- | --- |
-| 500 | 0 | 0.234375 | 1.95312 | 0 | 0 |
-| 1000 | 0 | 0.265625 | 3.90625 | 0 | 0 |
+| 500 | 0 | 0.203125 | 1.95312 | 0 | 0 |
+| 1000 | 0 | 0.25 | 3.90625 | 0 | 0 |
 | 2000 | 0 | 0.28125 | 7.8125 | 0 | 0 |
-| 3000 | 0 | 0.28125 | 11.7188 | 0 | 0 |
-| 4000 | 0 | 0.34375 | 15.625 | 0 | 0 |
-| 5000 | 0 | 0.296875 | 19.5312 | 0 | 0 |
+| 3000 | 0 | 0.3125 | 11.7188 | 0 | 0 |
+| 4000 | 0 | 0.3125 | 15.625 | 0 | 0 |
+| 5000 | 0 | 0.3125 | 19.5312 | 0 | 0 |
 
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_space_complexity_chart.png)
 
