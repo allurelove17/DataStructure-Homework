@@ -312,7 +312,7 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 
 | Size | Insertion_Time | Quick_Time | Merge_Time | Heap_Time | Composite_Time |
 | --- | --- | --- | --- | --- | --- |
-| 500 | 0.111346 | <span style="color:blue">0.027683</span>.0.027683 | 0.03297 | 0.043724 | 0 |
+| 500 | 0.111346 | <span style="color:blue">0.027683</span> | 0.03297 | 0.043724 | 0 |
 | 1000 | 0.422886 | 0.060356 | 0.073554 | 0.095788 | 0 |
 | 2000 | 1.6542 | 0.128793 | 0.157581 | 0.212458 | 0 |
 | 3000 | 3.69154 | 0.201406 | 0.250079 | 0.334839 | 0 |
