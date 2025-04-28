@@ -308,30 +308,58 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 ## 測試與驗證
 ## Sorting Algorithm Performance - Average Case
 
-| Size | Insertion_Time(ms) | Insertion_Memory(KB) | Quick_Time(ms) | Quick_Memory(KB) | Merge_Time(ms) | Merge_Memory(KB) | Heap_Time(ms) | Heap_Memory(KB) | Composite_Time(ms) | Composite_Memory(KB) |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 500 | 111.346 | 0 | 27.683 | 0.219727 | 32.97 | 1.95312 | 43.724 | 0 | 0 | 0 |
-| 1000 | 422.886 | 0 | 60.356 | 0.251953 | 73.554 | 3.90625 | 95.788 | 0 | 0 | 0 |
-| 2000 | 1654.2 | 0 | 128.793 | 0.28418 | 157.581 | 7.8125 | 212.458 | 0 | 0 | 0 |
-| 3000 | 3691.54 | 0 | 201.406 | 0.302734 | 250.079 | 11.7188 | 334.839 | 0 | 0 | 0 |
-| 4000 | 6555.64 | 0 | 277.942 | 0.31543 | 345.661 | 15.625 | 462.94 | 0 | 0 | 0 |
-| 5000 | 10191.4 | 0 | 356.078 | 0.326172 | 443.793 | 19.5312 | 585.954 | 0 | 0 | 0 |
+**Time Measurements (ms)**
+
+| Size | Insertion_Time | Quick_Time | Merge_Time | Heap_Time | Composite_Time |
+| --- | --- | --- | --- | --- | --- |
+| 500 | 111.346 | 27.683 | 32.97 | 43.724 | 0 |
+| 1000 | 422.886 | 60.356 | 73.554 | 95.788 | 0 |
+| 2000 | 1654.2 | 128.793 | 157.581 | 212.458 | 0 |
+| 3000 | 3691.54 | 201.406 | 250.079 | 334.839 | 0 |
+| 4000 | 6555.64 | 277.942 | 345.661 | 462.94 | 0 |
+| 5000 | 10191.4 | 356.078 | 443.793 | 585.954 | 0 |
 
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/average_time_complexity_chart.png)
+
+**Memory Usage (KB)**
+
+| Size | Insertion_Memory | Quick_Memory | Merge_Memory | Heap_Memory | Composite_Memory |
+| --- | --- | --- | --- | --- | --- |
+| 500 | 0 | 0.219727 | 1.95312 | 0 | 0 |
+| 1000 | 0 | 0.251953 | 3.90625 | 0 | 0 |
+| 2000 | 0 | 0.28418 | 7.8125 | 0 | 0 |
+| 3000 | 0 | 0.302734 | 11.7188 | 0 | 0 |
+| 4000 | 0 | 0.31543 | 15.625 | 0 | 0 |
+| 5000 | 0 | 0.326172 | 19.5312 | 0 | 0 |
+
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/average_space_complexity_chart.png)
 
 ## Sorting Algorithm Performance - Worst Case
 
-| Size | Insertion_Time(ms) | Insertion_Memory(KB) | Quick_Time(ms) | Quick_Memory(KB) | Merge_Time(ms) | Merge_Memory(KB) | Heap_Time(ms) | Heap_Memory(KB) | Composite_Time(ms) | Composite_Memory(KB) |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 500 | 300 | 0 | 34 | 0.234375 | 28 | 1.95312 | 54 | 0 | 0 | 0 |
-| 1000 | 838 | 0 | 72 | 0.265625 | 45 | 3.90625 | 140 | 0 | 0 | 0 |
-| 2000 | 3172 | 0 | 161 | 0.28125 | 89 | 7.8125 | 252 | 0 | 0 | 0 |
-| 3000 | 8926 | 0 | 214 | 0.28125 | 138 | 11.7188 | 367 | 0 | 0 | 0 |
-| 4000 | 13286 | 0 | 334 | 0.34375 | 182 | 15.625 | 523 | 0 | 0 | 0 |
-| 5000 | 23264 | 0 | 389 | 0.296875 | 236 | 19.5312 | 704 | 0 | 0 | 0 |
+**Time Measurements (ms)**
+
+| Size | Insertion_Time | Quick_Time | Merge_Time | Heap_Time | Composite_Time |
+| --- | --- | --- | --- | --- | --- |
+| 500 | 300 | 34 | 28 | 54 | 0 |
+| 1000 | 838 | 72 | 45 | 140 | 0 |
+| 2000 | 3172 | 161 | 89 | 252 | 0 |
+| 3000 | 8926 | 214 | 138 | 367 | 0 |
+| 4000 | 13286 | 334 | 182 | 523 | 0 |
+| 5000 | 23264 | 389 | 236 | 704 | 0 |
 
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_time_complexity_chart.png)
+
+**Memory Usage (KB)**
+
+| Size | Insertion_Memory | Quick_Memory | Merge_Memory | Heap_Memory | Composite_Memory |
+| --- | --- | --- | --- | --- | --- |
+| 500 | 0 | 0.234375 | 1.95312 | 0 | 0 |
+| 1000 | 0 | 0.265625 | 3.90625 | 0 | 0 |
+| 2000 | 0 | 0.28125 | 7.8125 | 0 | 0 |
+| 3000 | 0 | 0.28125 | 11.7188 | 0 | 0 |
+| 4000 | 0 | 0.34375 | 15.625 | 0 | 0 |
+| 5000 | 0 | 0.296875 | 19.5312 | 0 | 0 |
+
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_space_complexity_chart.png)
 
 ## 申論及開發報告
