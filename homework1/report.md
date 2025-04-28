@@ -385,6 +385,8 @@ Merge Memory: O(n)
 
 ### 結論
 根據line chart及table的數據可大致看出實際測試後的複雜度和理論上的複雜度是相符合的
+使用Average Casse在所有測試規模下Quick Sort的表現都是最好的
+使用Worst Case的情況下則是Merge Sort在所有測試規模下有最好的表現(!)
 
 ## 申論及開發報告
 1. ratio <==> duration
