@@ -29,7 +29,7 @@ std::chrono::high_resolution_clock::now(); // 可取得程式碼執行到這行�
 
 std::chrono::duration_cast<std::chrono::microseconds> // 將時間單位做轉換, 這裡轉成microseconds
 
-取得程式執行到這行的起始時間和程式跑完排序演算法的結束時間相減後即是執行時間.
+取得程式執行排序演算法的起始時間和程式跑完排序演算法的結束時間相減後即是執行時間.
 
 精度取microseconds,但在圖表會轉換成milliseconds.
 ```c++
