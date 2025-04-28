@@ -21,6 +21,20 @@
 ## 程式實作
 以下是各排序演算法的核心程式碼：
 
+**Timer**
+std::chrono::high_resolution_clock // C++當前提供的Timer中精度最高的
+std::chrono::high_resolution_clock::now(); // 可取得程式碼執行到這行當下的時間
+取得程式執行到這行的起始時間和程式跑完排序演算法的結束時間相減後即是執行時間.
+精度取microseconds,但在圖表會轉換成milliseconds.
+```c++
+double mergetime(int left, int right, SIZE_T& merge_memory) {
+	auto start = std::chrono::high_resolution_clock::now();
+	merge_sort(left, right);
+	auto end = std::chrono::high_resolution_clock::now();
+	return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+}
+```
+
 **Insertion Sort**
 ```c++
 double insertion_sort(int size) {
@@ -308,4 +322,6 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_space_complexity_chart.png)
 
 ## 申論及開發報告
+1. ratio <==> duration
+2. !!! merge sort worst case runtime is better than average one !!!
 ## 參考資料 // Option
