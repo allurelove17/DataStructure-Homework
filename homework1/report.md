@@ -31,7 +31,7 @@ std::chrono::duration_cast<std::chrono::microseconds> // 將時間單位做轉�
 
 取得程式執行排序演算法的起始時間和程式跑完排序演算法的結束時間相減後即是執行時間.
 
-精度取microseconds,但在圖表會轉換成milliseconds.
+精度取microseconds.
 ```c++
 double mergetime(int left, int right, SIZE_T& merge_memory) {
 	auto start = std::chrono::high_resolution_clock::now();
