@@ -291,20 +291,22 @@ std::vector<int> permutation(int n) {
 | Heap Sort | O(n log n) | O(n log n) | O(1) |
 | Composite Sort | 依選擇而異 | 依選擇而異 | 依選擇而異 |
 
-1. **Insertion Sort(Worst)**
+1. **Insertion Sort**
 $$\sum_{i=1}^{n} i = 1 + 2 + 3 + \ldots + n = $$
 $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\right) = \mathcal{O}\left(\frac{1}{2}n^2 + \frac{1}{2}n\right) = \mathcal{O}(n^2)$$
-- Time Complexity : $$\mathcal{O}\left(\frac{1}{2}n^2 + \frac{1}{2}n\right) = \mathcal{O}(n^2)$$
-- Space Complexity :  $$\mathcal{O}(1)$$
-2. **Quick Sort(Median-of-three method)(Worst)**
-- Time Complexity : $$\mathcal{O}(n\log n)$$ median-of-three method 會避免出現Worst Case 所以是 $$\mathcal{O}(n\log n)$$
-- Space Complexity : $$O(\log n)$$  median-of-three method to choose pivot 會讓遞迴的深度為 $$O(\log n)$$
-3. **Merge Sort(Worst)**
-- Time Complexity : $$\mathcal{O}(n\log n)$$ Iterative層數 $$\mathcal{\log O}(n)$$ , 每層 $$\mathcal{O}(n)$$
-- Space Complexity : $$\mathcal{O}(n)$$ 已排序array的大小,總共為n
-4. **Heap Sort(Worst)**
-- Time Complexity : $$\mathcal{O}(n\log n)$$ maxheap $$\mathcal{O}(\log n)$$ build $$\mathcal{O}(n)$$
-- Space Complexity : $$\mathcal{O}(1)$$ 不需要額外儲存陣列的資料
+- Worst Time Complexity : $$\mathcal{O}\left(\frac{1}{2}n^2 + \frac{1}{2}n\right) = \mathcal{O}(n^2)$$
+- Worst Space Complexity :  $$\mathcal{O}(1)$$
+- Average Time Complexity : $$\mathcal{O}(n^2)$$ Same as Worst Time Complexity
+- Worst Space Complexity :  
+2. **Quick Sort(Median-of-three method)**
+- Worst Time Complexity : $$\mathcal{O}(n\log n)$$ median-of-three method 會避免出現Worst Case 所以是 $$\mathcal{O}(n\log n)$$
+- Worst Space Complexity : $$O(\log n)$$  median-of-three method to choose pivot 會讓遞迴的深度為 $$O(\log n)$$
+3. **Merge Sort**
+- Worst Time Complexity : $$\mathcal{O}(n\log n)$$ Iterative層數 $$\mathcal{\log O}(n)$$ , 每層 $$\mathcal{O}(n)$$
+- Worst Space Complexity : $$\mathcal{O}(n)$$ 已排序array的大小,總共為n
+4. **Heap Sort**
+- Worst Time Complexity : $$\mathcal{O}(n\log n)$$ maxheap $$\mathcal{O}(\log n)$$ build $$\mathcal{O}(n)$$
+- Worst Space Complexity : $$\mathcal{O}(1)$$ 不需要額外儲存陣列的資料
 ## 測試與驗證
 ## Sorting Algorithm Performance - Average Case
 
