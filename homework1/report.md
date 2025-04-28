@@ -331,6 +331,9 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 
 **Average Case - Memory Usage (KB)**
 
+Insertion & Heap & Composite Memory: O(1)
+
+
 | Size | Insertion_Memory | Quick_Memory | Merge_Memory | Heap_Memory | Composite_Memory |
 | --- | --- | --- | --- | --- | --- |
 | 500 | 0 | 0.220703 | 1.95312 | 0 | 0 |
