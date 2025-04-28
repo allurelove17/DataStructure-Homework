@@ -16,112 +16,7 @@
 #include "Merge.hpp"
 #include "heap.hpp"
 #include "permutation.hpp"
-
-// Composite sort class that intelligently selects the best algorithm
-/*template<class T>
-class composite_sort {
-public:
-    composite_sort(int SIZE) {
-        array = new T[SIZE];
-        quick_sorter = new quick<T>(SIZE);
-        heap_sorter = new heap<T>(SIZE);
-        merge_sorter = new Merge<T>(SIZE);
-        insertion_sorter = new insertion<T>(SIZE);
-    }
-
-    ~composite_sort() {
-        delete[] array;
-        delete quick_sorter;
-        delete heap_sorter;
-        delete merge_sorter;
-        delete insertion_sorter;
-    }
-
-    void print(int size) {
-        for (int i = 0; i < size; ++i) {
-            std::cout << *(this->array + i) << ' ';
-        }
-        std::cout << '\n';
-    }
-
-    double sort(int size) {
-        // Copy data to all sorters
-        for (int i = 0; i < size; ++i) {
-            quick_sorter->array[i] = array[i];
-            heap_sorter->array[i] = array[i];
-            merge_sorter->array[i] = array[i];
-            insertion_sorter->array[i] = array[i];
-        }
-
-        auto start = std::chrono::steady_clock::now();
-
-        // Choose algorithm based on input size and array characteristics
-        if (size <= 20) {
-            // For very small arrays, insertion sort is efficient
-            insertion_sorter->insertion_sort(size);
-            // Copy result back
-            for (int i = 0; i < size; ++i) {
-                array[i] = insertion_sorter->array[i];
-            }
-        }
-        else if (is_nearly_sorted(size)) {
-            // For nearly sorted data, heap sort performs well
-            heap_sorter->heap_sort(size);
-            // Copy result back
-            for (int i = 0; i < size; ++i) {
-                array[i] = heap_sorter->array[i];
-            }
-        }
-        else if (size <= 1000) {
-            // For moderate size arrays, quick sort is very efficient
-            quick_sorter->quick_sort(0, size - 1);
-            // Copy result back
-            for (int i = 0; i < size; ++i) {
-                array[i] = quick_sorter->array[i];
-            }
-        }
-        else {
-            // For large arrays, select based on your performance data
-            // Based on your data, quick sort is generally fastest
-            quick_sorter->quick_sort(0, size - 1);
-            // Copy result back
-            for (int i = 0; i < size; ++i) {
-                array[i] = quick_sorter->array[i];
-            }
-        }
-
-        auto end = std::chrono::steady_clock::now();
-        return std::chrono::duration<double, std::milli>(end - start).count();
-    }
-
-    // Helper function to detect if array is nearly sorted
-    bool is_nearly_sorted(int size) {
-        int max_inversions = size / 10; // Allow 10% of elements to be out of order
-        int inversions = 0;
-
-        for (int i = 0; i < size - 1; ++i) {
-            if (array[i] > array[i + 1]) {
-                inversions++;
-                if (inversions > max_inversions)
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    T* array;
-private:
-    quick<T>* quick_sorter;
-    heap<T>* heap_sorter;
-    Merge<T>* merge_sorter;
-    insertion<T>* insertion_sorter;
-};*/
-
-/*void getMemoryUsage(SIZE_T& workingSetSize) {
-    PROCESS_MEMORY_COUNTERS memInfo;
-    GetProcessMemoryInfo(GetCurrentProcess(), &memInfo, sizeof(memInfo));
-    workingSetSize = memInfo.WorkingSetSize;
-}*/
+#include "composite.hpp"
 
 void getMemoryUsage(SIZE_T& workingSetSize) {
     PROCESS_MEMORY_COUNTERS_EX memInfo;
@@ -151,41 +46,36 @@ std::vector<int> permutation(int n) {
 
 std::vector<int> generate_merge_worst_case_recursive(int n) {
     if (n <= 0) {
-        return {}; // ªÅ§Ç¦C
+        return {}; 
     }
     if (n == 1) {
-        return { 1 }; // n=1 ªº°òÂ¦±¡ªp
+        return { 1 }; 
     }
 
-    // ±N n ¤À¦¨¨â¥b¡Ak ¬O«e¥b³¡¤Àªº¤j¤p (¦V¤W¨ú¾ã)
     int k = std::ceil(static_cast<double>(n) / 2.0);
-    int m = n - k; // «á¥b³¡¤Àªº¤j¤p
+    int m = n - k;
 
-    // »¼°j²£¥Í¥ª¥k¨â³¡¤Àªº¼Ò¦¡
     std::vector<int> left_part = generate_merge_worst_case_recursive(k);
     std::vector<int> right_part = generate_merge_worst_case_recursive(m);
 
-    std::vector<int> result(n); // ³Ì²×µ²ªG§Ç¦C
+    std::vector<int> result(n);
     int current_index = 0;
 
-    // ³B²z¥ª¥b³¡¤À¡G±N»¼°jµ²ªG¤¤ªº¨C­Ó­È x Âà´«¬° 2x
     for (int val : left_part) {
         result[current_index++] = 2 * val;
     }
 
-    // ³B²z¥k¥b³¡¤À¡G±N»¼°jµ²ªG¤¤ªº¨C­Ó­È x Âà´«¬° 2x - 1
     for (int val : right_part) {
         result[current_index++] = 2 * val - 1;
     }
 
-    return result; // ªð¦^ºc³y¦nªº§Ç¦C
+    return result;
 }
 
 
 template<class T>
 std::vector<T> worstCaseOfmerge(int n) {
     if (n <= 0) return {};
-    // »¼°j¨ç¼Æª½±µ¥Í¦¨©Ò»Ýªº 1..n ±Æ¦C
     return generate_merge_worst_case_recursive(n);
 }
 
@@ -325,8 +215,8 @@ int main() {
             worst_merge_memory[size] = total_merge_mem / WORST_RUNS;
 
 
-            double worst_quick_time = 0.0, worst_heap_time = 0.0;
-            SIZE_T final_quick_memory = 0, final_heap_memory = 0;
+            double worst_quick_time = 0.0, worst_heap_time = 0.0, worst_composite_time = 0.0;
+            SIZE_T final_quick_memory = 0, final_heap_memory = 0, final_composite_memory = 0.0;
             for (int runtime = 0; runtime < 100; ++runtime) {
                 std::vector<int> worst = permutation(size);
                 // Quick
@@ -365,11 +255,30 @@ int main() {
                         worst_heap_permutations[size][i] = worst[i];
                     }
                 }
+
+                composite_sort<int> arr_composite(size);
+                SIZE_T composite_memory = 0;
+                getMemoryUsage(beforeMemory); // Composite
+                for (int i = 0; i < size; ++i) {
+                    arr_composite.array[i] = worst[i];
+                }
+                double composite_time = arr_composite.sort(size, composite_memory);
+                getMemoryUsage(afterMemory);
+                if (afterMemory > beforeMemory) {
+                    composite_memory = afterMemory - beforeMemory;
+                }
+
+                if (composite_time > worst_composite_time) {
+                    worst_composite_time = composite_time;
+                    final_composite_memory = composite_memory;
+                }
             }
             worst_quick_times[size] = worst_quick_time;
             worst_quick_memory[size] = final_quick_memory;
             worst_heap_times[size] = worst_heap_time;
             worst_heap_memory[size] = final_heap_memory;
+            worst_composite_times[size] = worst_composite_time;
+            worst_composite_memory[size] = final_composite_memory;
         }
 
         std::ofstream WorstCaseResults("sorting_worstcase.csv");
@@ -432,7 +341,7 @@ int main() {
                 quick<int> arr_quick(size);
                 Merge<int> arr_merge(size);
                 heap<int> arr_heap(size);
-                //composite_sort<int> arr_composite(size);
+                composite_sort<int> arr_composite(size);
 
                 std::vector<int> data(size);
                 for (int i = 0; i < size; ++i) {
@@ -445,7 +354,7 @@ int main() {
                     arr_quick.array[i] = data[i];
                     arr_merge.array[i] = data[i];
                     arr_heap.array[i] = data[i];
-                    //arr_composite.array[i] = data[i];
+                    arr_composite.array[i] = data[i];
                 }
 
                 SIZE_T beforeMemory = 0, afterMemory = 0;
@@ -471,13 +380,19 @@ int main() {
                 double heap_time = heap_time = arr_heap.heap_sort(size);
                 getMemoryUsage(afterMemory);
                 heap_memory = afterMemory - beforeMemory;
-                //double composite_time = instrumented_composite_sort(arr_composite, size, composite_memory);
+
+                getMemoryUsage(beforeMemory);
+                double composite_time = arr_composite.sort(size, composite_memory);
+                getMemoryUsage(afterMemory);
+                if (afterMemory > beforeMemory) {
+                    composite_memory = afterMemory - beforeMemory;
+                }
 
                 total_insertion_times[size] += insertion_time;
                 total_quick_times[size] += quick_time;
                 total_merge_times[size] += merge_time;
                 total_heap_times[size] += heap_time;
-                //total_composite_times[size] += composite_time;
+                total_composite_times[size] += composite_time;
 
                 total_insertion_memory[size] += insertion_memory;
                 total_quick_memory[size] += quick_memory;
