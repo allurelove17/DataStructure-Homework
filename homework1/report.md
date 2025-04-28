@@ -292,7 +292,7 @@ std::vector<int> permutation(int n) {
 | Composite Sort | 依選擇而異 | 依選擇而異 | 依選擇而異 |
 
 1. **Insertion Sort(Worst)**
-$$\sum_{i=1}^{n} i = 1 + 2 + 3 + \ldots + n$$
+$$\sum_{i=1}^{n} i = 1 + 2 + 3 + \ldots + n = $$
 $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\right) = \mathcal{O}\left(\frac{1}{2}n^2 + \frac{1}{2}n\right) = \mathcal{O}(n^2)$$
 - Time Complexity : $$\mathcal{O}\left(\frac{1}{2}n^2 + \frac{1}{2}n\right) = \mathcal{O}(n^2)$$
 - Space Complexity :  $$\mathcal{O}(1)$$
