@@ -295,18 +295,24 @@ std::vector<int> permutation(int n) {
 $$\sum_{i=1}^{n} i = 1 + 2 + 3 + \ldots + n = $$
 $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\right) = \mathcal{O}\left(\frac{1}{2}n^2 + \frac{1}{2}n\right) = \mathcal{O}(n^2)$$
 - Worst Time Complexity : $$\mathcal{O}\left(\frac{1}{2}n^2 + \frac{1}{2}n\right) = \mathcal{O}(n^2)$$
-- Worst Space Complexity :  $$\mathcal{O}(1)$$
+- Worst Space Complexity : $$\mathcal{O}(1)$$
 - Average Time Complexity : $$\mathcal{O}(n^2)$$ Same as Worst Time Complexity
-- Worst Space Complexity :  
+- Average Space Complexity : $$\mathcal{O}(1)$$
 2. **Quick Sort(Median-of-three method)**
 - Worst Time Complexity : $$\mathcal{O}(n\log n)$$ median-of-three method 會避免出現Worst Case 所以是 $$\mathcal{O}(n\log n)$$
 - Worst Space Complexity : $$O(\log n)$$  median-of-three method to choose pivot 會讓遞迴的深度為 $$O(\log n)$$
+- Average Time Complexity : $$\mathcal{O}(n\log n)$$ 
+- Average Space Complexity : $$O(\log n)$$
 3. **Merge Sort**
 - Worst Time Complexity : $$\mathcal{O}(n\log n)$$ Iterative層數 $$\mathcal{\log O}(n)$$ , 每層 $$\mathcal{O}(n)$$
 - Worst Space Complexity : $$\mathcal{O}(n)$$ 已排序array的大小,總共為n
+- Average Time Complexity : $$\mathcal{O}(n\log n)$$
+- Average Space Complexity : $$\mathcal{O}(n)$$
 4. **Heap Sort**
 - Worst Time Complexity : $$\mathcal{O}(n\log n)$$ maxheap $$\mathcal{O}(\log n)$$ build $$\mathcal{O}(n)$$
-- Worst Space Complexity : $$\mathcal{O}(1)$$ 不需要額外儲存陣列的資料
+- Worst Space Complexity : $$\mathcal{O}(1)$$ 不需要額外儲存陣列的資料(In-place algorithm)
+- Average Time Complexity : $$\mathcal{O}(n\log n)$$ Same as Worst Time Complexity
+- Average Space Complexity : $$\mathcal{O}(1)$$ 不需要額外儲存陣列的資料(In-place algorithm)
 ## 測試與驗證
 ## Sorting Algorithm Performance - Average Case
 
@@ -369,4 +375,5 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 2. !!! merge sort worst case runtime is better than average one !!!
 3. #include <Windows.h> // GetCurrentProcess
 #include <psapi.h>
+4. Merge Sort 使用O(n)的空間會跑比較快
 ## 參考資料 // Option
