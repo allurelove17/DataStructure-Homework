@@ -332,7 +332,13 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 **Average Case - Memory Usage (KB)**
 
 Insertion & Heap & Composite Memory: O(1)
-
+Quick Memory: O(logn)
+- log₂(5000)/log₂(500) ≈ 12.29/8.97 ≈ 1.37
+- 0.326172/0.220703 ≈ 1.478
+  1.37 跟 1.478很相近
+Merge Memory: O(n)
+- 5000/500 = 10
+- 19.5312/1.95312 = 10
 
 | Size | Insertion_Memory | Quick_Memory | Merge_Memory | Heap_Memory | Composite_Memory |
 | --- | --- | --- | --- | --- | --- |
