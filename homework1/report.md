@@ -19,7 +19,7 @@
    - 使用隨機排列的數據，對於每個輸入規模進行1000次測試
    - 確保各排序算法使用相同的輸入資料，以消除測試數據差異的影響
 ## 程式實作
-以下是各排序算法的核心程式碼：
+以下是各排序演算法的核心程式碼：
 
 **Insertion Sort**
 ```c++
@@ -186,6 +186,71 @@ double heap_sort(int size) {
 	auto end = std::chrono::high_resolution_clock::now();
 	return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 }
+```
+
+**Random Permutation for Heap Sort & Quick Sort**
+```c++
+std::vector<int> permutation(int n) {
+    std::vector<int> result(n);
+    for (int i = 0; i < n; i++) {
+        result[i] = i + 1;
+    }
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+
+    std::shuffle(result.begin(), result.end(), g);
+
+    return result;
+}
+```
+
+```c++
+    double worst_quick_time = 0.0, worst_heap_time = 0.0;
+    SIZE_T final_quick_memory = 0, final_heap_memory = 0;
+    for (int runtime = 0; runtime < 100; ++runtime) { // Run it 100 times and choose the worst one as the worst case.
+        std::vector<int> worst = permutation(size);
+        
+        quick<int> arr_quick(size); // Quick Sort
+        SIZE_T quick_memory = 0;
+
+        for (int i = 0; i < size; ++i) { // Random data for Quicksort
+            arr_quick.array[i] = worst[i];
+        }
+        double quick_time = arr_quick.quicktime(0, size - 1, quick_memory);
+
+        if (quick_time > worst_quick_time) { // If find the worse one. Replace the worst quick sort runtime.
+            worst_quick_time = quick_time;
+            final_quick_memory = quick_memory;
+            for (int i = 0; i < size; ++i) {
+                worst_quick_permutations[size][i] = worst[i];
+            }
+        }
+
+        //==============================================================
+
+        heap<int> arr_heap(size); // Heap Sort
+        getMemoryUsage(beforeMemory); 
+        for (int i = 0; i < size; ++i) {
+            arr_heap.array[i] = worst[i];
+        }
+        double heap_time = arr_heap.heap_sort(size);
+        getMemoryUsage(afterMemory);
+        SIZE_T heap_memory = afterMemory - beforeMemory;
+
+        if (heap_time > worst_heap_time) { // If find the worse one. Replace the worst heap sort runtime.
+            worst_heap_time = heap_time;
+            final_heap_memory = heap_memory;
+            for (int i = 0; i < size; ++i) {
+                worst_heap_permutations[size][i] = worst[i];
+            }
+        }
+    }
+    // Worst Case for Quick & Heap
+    worst_quick_times[size] = worst_quick_time;
+    worst_quick_memory[size] = final_quick_memory;
+    worst_heap_times[size] = worst_heap_time;
+    worst_heap_memory[size] = final_heap_memory;
 ```
 
 ## 效能分析
