@@ -54,7 +54,7 @@ double insertion_sort(int size) {
 ```
 
 **Quick Sort (Median of Three Method)**
-### 可避免Worst Case for Quick Sort
+### 可避免Worst Case of Quick Sort
 ```c++
 int findMedianOfThree(int left, int mid, int right) {
 	T a = *(this->array + left);
