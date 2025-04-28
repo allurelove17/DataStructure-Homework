@@ -391,7 +391,7 @@ Merge Memory: O(n)
 ## 申論及開發報告
 1. ratio <==> duration
 2. !!! merge sort worst case runtime is better than average one !!!
-3. #include <Windows.h> // GetCurrentProcess
-#include <psapi.h>
+#include <Windows.h>在include時必須在#include <psapi.h>前面不然會沒法執行
+
 4. Merge Sort 使用O(n)的空間會跑比較快
 ## 參考資料 // Option
