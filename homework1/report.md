@@ -370,6 +370,9 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_space_complexity_chart.png)
 
+### 結論
+根據line chart及table的數據可大致看出實際測試後的複雜度和理論上的複雜度是相符合的
+
 ## 申論及開發報告
 1. ratio <==> duration
 2. !!! merge sort worst case runtime is better than average one !!!
