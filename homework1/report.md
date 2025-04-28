@@ -20,6 +20,7 @@
    - 確保各排序算法使用相同的輸入資料，以消除測試數據差異的影響
 ## 程式實作
 以下是各排序算法的核心程式碼：
+**Insertion Sort**
 ```c++
 double insertion_sort(int size) {
 	auto start = std::chrono::high_resolution_clock::now();
