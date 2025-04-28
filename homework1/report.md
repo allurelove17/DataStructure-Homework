@@ -20,6 +20,21 @@
    - 確保各排序算法使用相同的輸入資料，以消除測試數據差異的影響
 ## 程式實作
 以下是各排序算法的核心程式碼：
+```c++
+double insertion_sort(int size) {
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int i = 1; i < size; ++i) {
+		int value = *(this->array + i), j;
+		for (j = i - 1; j >= 0 && value < *(this->array + j); --j) {
+			if (value < *(this->array + j))
+				*(this->array + j + 1) = *(this->array + j);
+		}
+		*(this->array + j + 1) = value;
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+}
+```
 
 ## 效能分析
 ### 理論複雜度分析
