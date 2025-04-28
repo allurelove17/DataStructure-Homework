@@ -205,6 +205,7 @@ double heap_sort(int size) {
 ```
 
 **Random Permutation for Heap Sort & Quick Sort**
+
 std::mt19937 : A Mersenne Twister pseudo-random generator. 
 std::random_device : 用來產生不確定性的隨機數
 std::shuffle(begin, last, g);  將[first,last)內的元素根據g(uniform random number generator)進行重新排序
