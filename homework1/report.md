@@ -370,6 +370,7 @@ Merge Memory: O(n)
 ![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework1/worst_time_complexity_chart.png)
 
 **Worst Case - Memory Usage (KB)**
+算法跟Average Case一樣
 
 | Size | Insertion_Memory | Quick_Memory | Merge_Memory | Heap_Memory | Composite_Memory |
 | --- | --- | --- | --- | --- | --- |
