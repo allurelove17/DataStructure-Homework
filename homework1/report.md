@@ -365,4 +365,6 @@ $$\mathcal{O}\left(\sum_{i=1}^{n} i\right) = \mathcal{O}\left(\frac{(n+1)n}{2}\r
 ## 申論及開發報告
 1. ratio <==> duration
 2. !!! merge sort worst case runtime is better than average one !!!
+3. #include <Windows.h> // GetCurrentProcess
+#include <psapi.h>
 ## 參考資料 // Option
