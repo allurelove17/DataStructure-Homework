@@ -1,11 +1,6 @@
 #ifndef HEAP_HPP
 #define HEAP_HPP
 
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <chrono>
-
 template<class T>
 class heap {
 public:
