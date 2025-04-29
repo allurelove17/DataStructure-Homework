@@ -1,10 +1,6 @@
 #ifndef INSERTION_HPP
 #define INSERTION_HPP
 
-#include <iostream>
-#include <algorithm>
-#include <chrono>
-
 template<class T>
 class insertion{
 public:
