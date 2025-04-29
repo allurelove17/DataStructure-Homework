@@ -101,7 +101,6 @@ public:
 		else {
 			// std::cout << "Calculate Quick Memory Usage.\n";
 			quick_memory = max_depth * (3 * sizeof(int) + sizeof(T));
-			std::cout << sizeof(T) << '\n';
 		}
 
 		return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
