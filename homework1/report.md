@@ -537,7 +537,10 @@ while (i <= mid && j <= right) {
 所以根據Merge Sort的程式碼來看,只要正在排序的區間前1/2和後1/2能夠在上面的while loop裡讓i跟j的總和越大或k的數值越大,則判斷次數越多執行的效率就越差.而要達成這樣的目的必須左半邊加入array和右半邊加入array的次數要盡量的平均
 
 **Implementation**
-根據以上的推論可以得知要想讓區間內左右兩邊的數值加入array的次數能夠平均則陣列內的數值必須是**交錯**的
+根據以上的推論可以得知要想讓區間內左右兩邊的數值加入array的次數能夠平均,則陣列內的數值必須盡量是**交錯**的,以下的程式碼使用recursive的方式產生Merge Sort的Worst Case.
+
+generate_merge_worst_case_recursive:
+給定要產生的worst case大小,該程式碼會盡量地將worst case的大小平均的遞迴下去,然後再將結果合併起來
 
 ```c++
 std::vector<int> generate_merge_worst_case_recursive(int n) {
@@ -558,11 +561,11 @@ std::vector<int> generate_merge_worst_case_recursive(int n) {
     int current_index = 0;
 
     for (int val : left_part) {
-        result[current_index++] = 2 * val;
+        result[current_index++] = 2 * val; // 確保數值是交錯的
     }
 
     for (int val : right_part) {
-        result[current_index++] = 2 * val - 1;
+        result[current_index++] = 2 * val - 1; // 確保數值是交錯的
     }
 
     return result;
