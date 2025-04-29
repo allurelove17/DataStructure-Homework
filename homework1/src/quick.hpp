@@ -1,9 +1,5 @@
 #ifndef QUICK_HPP
 #define QUICK_HPP
-#include <iostream>
-#include <algorithm>
-#include <chrono>
-#include <stack>
 
 template<class T>
 class quick {
