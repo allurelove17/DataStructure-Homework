@@ -543,17 +543,18 @@ std::vector<int> generate_merge_worst_case_recursive(int n) {
 
 ### Unexpected Results in Merge Sort Worst Case Analysis
 ## Why Merge Sort Worst Case better than Average Case?
-剛開始我認為只是我的Worst Case沒生好所以我將Worst Case的產生方式重寫(換了4, 5種方法)但一直遇到相同的問題, 所以我決定換台電腦測試但問題還是沒有解決, 接下來我換了測試的環境改成用Linux執行但結果還是一樣
-在實際測試時發現刻意生成的Worst Case(for Merge Sort)執行的速度比Random Case還要來的快,不論換了多少種生成Worst Case的方式甚至是換成Linux系統去測試結果還是一樣.
 
-實際情況跟理論
+以下為嘗試解決的辦法(全部失敗)
+- 將Worst Case的產生方式重寫(換了4, 5種方法)
+- 換電腦測試
+- 改成用Linux執行
+- 開啟O2優化
 
-1. ratio <==> duration
-2. !!! merge sort worst case runtime is better than average one !!!
-#include <Windows.h>在include時必須在#include <psapi.h>前面不然會沒法執行
+網路上找到的可能原因
+- CPU會做Branch prediction
 
-4. Merge Sort 使用O(n)的空間會跑比較快
 ## 附錄
 在Linux環境中用size_t
 在Windows環境中用SIZE_T
+#include <Windows.h>在include時必須在#include <psapi.h>前面不然會沒法執行
 ## 參考資料 // Option
