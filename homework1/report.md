@@ -12,7 +12,7 @@
 ### 測試資料產生
 1. **最壞情況 (Worst Case)**
 - Insertion Sort：使用 [n, n-1, n-2, ..., 1] 的降序序列
-- Merge Sort：根據算法特性產生最壞資料，使用迭代方式避免堆疊溢位
+- Merge Sort：根據演算法特性使用recursive推出測試資料
 - Quick Sort：隨機產生多種資料，保留需排序時間最長的測試資料
 - Heap Sort：隨機產生多種資料，保留需排序時間最長的測試資料
 2. **平均情況 (Average Case)**
