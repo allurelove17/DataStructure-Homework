@@ -550,8 +550,9 @@ std::vector<int> generate_merge_worst_case_recursive(int n) {
 - 改成用Linux執行
 - 開啟O2優化
 
-網路上找到的可能原因
-- CPU會做Branch prediction
+網路上找到的可能原因(猜測)
+- CPU會做Branch prediction, 所以理論上的Worst Case在實際執行時反而可能會比較快
+- C++底層的machine code的運作機制, 可能會導致一些實際狀況與預期的結果不同
 
 ## 附錄
 在Linux環境中用size_t
