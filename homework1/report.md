@@ -487,6 +487,7 @@ Merge Memory: O(n)
 **1.Insertion Sort**
 
 雖然Insertion Sort的理論時間複雜度並不好在但在Size很小的情況下Insertion Sort的表現是相當出色的
+(Insertion Sort 相比於其他3個排序演算法並不需要額外調用資源,所以在Size很小的情況下實際執行時間是優於其他排序演算法的)
 
 以下是每個Size各執行10000次的平均執行時間,可以發現當Size小於75時Insertion Sort的表現是穩定優於其他3個排序演算法的,所以當Size小於
 75時Composite Sort會選擇使用Insertion Sort去對陣列進行排序
@@ -518,6 +519,56 @@ Merge Memory: O(n)
 **2.Quick Sort**
 
 根據以上的數據統計可以發現當Size不是極小值時,Quick sort無論測資大小為何都有著最好的表現所以當Size>75時Composite Sort 一律選擇使用Quick Sort進行排序,且median-of-three method可以避免worst case的情況發生這也降低了Composite Sort爆掉的風險
+
+## Worst Case of Merge Sort
+依照我實作的Merge Sort來看(以下為Merge Sort的部分程式碼),理論上只要能讓以下程式碼判斷式的執行次數盡量得多就可以得到Worst Case
+```c++
+while (i <= mid && j <= right) {
+    if (temp_array[i] <= temp_array[j]) {
+        array[k++] = temp_array[i++];
+    }
+    else {
+        array[k++] = temp_array[j++];
+    }
+}
+```
+而Merge Sort執行的過程為將要排序的陣列分成好幾個區間,每個區間再剖半進行比較並將較小的數值放進array裡
+
+所以根據Merge Sort的程式碼來看,只要正在排序的區間前1/2和後1/2能夠在上面的while loop裡讓i跟j的總和越大或k的數值越大,則判斷次數越多執行的效率就越差.而要達成這樣的目的必須左半邊加入array和右半邊加入array的次數要盡量的平均
+
+**Implementation**
+根據以上的推論可以得知要想讓區間內左右兩邊的數值加入array的次數能夠平均則陣列內的數值必須是**交錯**的
+
+```c++
+std::vector<int> generate_merge_worst_case_recursive(int n) {
+    if (n <= 0) {
+        return {}; 
+    }
+    if (n == 1) {
+        return { 1 }; 
+    }
+
+    int k = std::ceil(static_cast<double>(n) / 2.0);
+    int m = n - k;
+
+    std::vector<int> left_part = generate_merge_worst_case_recursive(k);
+    std::vector<int> right_part = generate_merge_worst_case_recursive(m);
+
+    std::vector<int> result(n);
+    int current_index = 0;
+
+    for (int val : left_part) {
+        result[current_index++] = 2 * val;
+    }
+
+    for (int val : right_part) {
+        result[current_index++] = 2 * val - 1;
+    }
+
+    return result;
+}
+```
+
 
 1. ratio <==> duration
 2. !!! merge sort worst case runtime is better than average one !!!
