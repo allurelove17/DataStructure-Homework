@@ -515,7 +515,9 @@ Merge Memory: O(n)
 | 95 | 0.0049852 | 0.0044090 | 0.0054459 | 0.0066776 |
 | 100 | 0.0055446 | 0.0047204 | 0.0058773 | 0.0071470 |
 
+**2.Quick Sort**
 
+根據以上的數據統計可以發現當Size不是極小值時,Quick sort無論測資大小為何都有著最好的表現所以當Size>75時Composite Sort 一律選擇使用Quick Sort進行排序,且median-of-three method可以避免worst case的情況發生這也降低了Composite Sort爆掉的風險
 
 1. ratio <==> duration
 2. !!! merge sort worst case runtime is better than average one !!!
