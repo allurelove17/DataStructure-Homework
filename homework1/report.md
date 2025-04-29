@@ -42,6 +42,7 @@ double mergetime(int left, int right, SIZE_T& merge_memory) {
 ```
 
 **Insertion Sort**
+
 ```c++
 double insertion_sort(int size) {
 	auto start = std::chrono::high_resolution_clock::now();
@@ -60,6 +61,8 @@ double insertion_sort(int size) {
 
 **Quick Sort (Median of Three Method)**
 ### Median of Three Method可避免Worst Case of Quick Sort
+
+讓pivot的選擇更好使得帶排序的資料發生不平衡的狀況消失
 ```c++
 int findMedianOfThree(int left, int mid, int right) {
 	T a = *(this->array + left);
@@ -118,6 +121,8 @@ void quick_sort(int left, int right, SIZE_T& quick_memory, int depth, int& max_d
 ```
 
 **Merge Sort (Iterative)**
+
+merge_sort將陣列切成很多小塊, 每個小區塊的大小為2->4->8->...倍增, merge則把待排序的小區塊分成兩半去進行比較由小到大放入陣列裡
 ```c++
 void merge_sort(int left, int right) {
     int n = right - left + 1;
