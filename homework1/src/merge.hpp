@@ -1,11 +1,5 @@
 #ifndef MERGE_HPP
 #define MERGE_HPP
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <chrono>
-#include <Windows.h> // Add these Windows headers
-#include <psapi.h>
 
 template<class T>
 class Merge {
