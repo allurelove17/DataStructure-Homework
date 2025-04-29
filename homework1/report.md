@@ -164,6 +164,8 @@ void merge(int left, int mid, int right) {
 ```
 
 **Heap Sort**
+
+使用complete binary tree並對每個子樹建立maxheap之後把root跟最後的節點對換,一直重複直到排序完為止
 ```c++
 void maxheap(int root, int length) {
 	int left = 2 * root, right = 2 * root + 1, max;
