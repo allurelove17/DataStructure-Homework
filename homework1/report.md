@@ -307,7 +307,7 @@ std::vector<int> permutation(int n) {
         }
 
         auto end = std::chrono::high_resolution_clock::now();
-        return std::chrono::duration<double, std::milli>(end - start).count();
+        return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
     }
 ```
 
@@ -448,7 +448,7 @@ Merge Memory: O(n)
         }
 
         auto end = std::chrono::high_resolution_clock::now();
-        return std::chrono::duration<double, std::milli>(end - start).count();
+        return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
     }
 ```
 **1.Insertion Sort**
