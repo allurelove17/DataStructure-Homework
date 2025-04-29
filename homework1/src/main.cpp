@@ -15,7 +15,6 @@
 #include "quick_medianOfThree_recursive.hpp"
 #include "Merge.hpp"
 #include "heap.hpp"
-#include "permutation.hpp"
 #include "composite.hpp"
 
 void getMemoryUsage(SIZE_T& workingSetSize) {
