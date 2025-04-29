@@ -1,10 +1,5 @@
 #ifndef QUICK_HPP
 #define QUICK_HPP
-#include <iostream>
-#include <algorithm>
-#include <chrono>
-#include <Windows.h> // Add these Windows headers
-#include <psapi.h>
 
 template<class T>
 class quick {
