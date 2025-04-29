@@ -548,4 +548,7 @@ std::vector<int> generate_merge_worst_case_recursive(int n) {
 #include <Windows.h>在include時必須在#include <psapi.h>前面不然會沒法執行
 
 4. Merge Sort 使用O(n)的空間會跑比較快
+## 附錄
+在Linux環境中用size_t
+在Windows環境中用SIZE_T
 ## 參考資料 // Option
