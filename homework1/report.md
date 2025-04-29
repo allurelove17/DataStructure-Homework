@@ -541,6 +541,7 @@ std::vector<int> generate_merge_worst_case_recursive(int n) {
 }
 ```
 
+### Why Merge Sort Worst Case better than Average Case?
 
 1. ratio <==> duration
 2. !!! merge sort worst case runtime is better than average one !!!
