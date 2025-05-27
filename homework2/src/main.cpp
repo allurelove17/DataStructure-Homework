@@ -8,9 +8,9 @@
 // ===== PROBLEM 1: Min Priority Queue =====
 
 template <class T>
-class MinPQ {
+class PQ {
 public:
-    virtual ~MinPQ() {}
+    virtual ~PQ() {}
     virtual bool IsEmpty() const = 0;
     virtual const T& Top() const = 0;
     virtual void Push(const T&) = 0;
@@ -18,7 +18,7 @@ public:
 };
 
 template <class T>
-class MinHeap : public MinPQ<T> {
+class MinHeap : public PQ<T> {
 private:
     std::vector<T> heap;
 
@@ -46,6 +46,72 @@ private:
         if (smallest != index) {
             std::swap(heap[index], heap[smallest]);
             heapifyDown(smallest);
+        }
+    }
+
+public:
+    bool IsEmpty() const override {
+        return heap.empty();
+    }
+
+    const T& Top() const override {
+        if (heap.empty()) {
+            throw std::runtime_error("Priority queue is empty");
+        }
+        return heap[0];
+    }
+
+    void Push(const T& element) override {
+        heap.push_back(element);
+        heapifyUp(heap.size() - 1);
+    }
+
+    void Pop() override {
+        if (heap.empty()) {
+            throw std::runtime_error("Priority queue is empty");
+        }
+
+        heap[0] = heap.back();
+        heap.pop_back();
+        if (!heap.empty()) {
+            heapifyDown(0);
+        }
+    }
+
+    size_t size() const {
+        return heap.size();
+    }
+};
+
+template <class T>
+class MaxHeap : public PQ<T> {
+private:
+    std::vector<T> heap;
+
+    void heapifyUp(int index) {
+        if (index == 0) return;
+        int parent = (index - 1) / 2;
+        if (heap[index] > heap[parent]) {
+            std::swap(heap[index], heap[parent]);
+            heapifyUp(parent);
+        }
+    }
+
+    void heapifyDown(int index) {
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+        int largest = index;
+
+        if (left < heap.size() && heap[left] < heap[largest]) {
+            largest = left;
+        }
+        if (right < heap.size() && heap[right] < heap[largest]) {
+            largest = right;
+        }
+
+        if (largest != index) {
+            std::swap(heap[index], heap[largest]);
+            heapifyDown(largest);
         }
     }
 
