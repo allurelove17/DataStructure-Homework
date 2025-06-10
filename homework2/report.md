@@ -259,6 +259,9 @@ k 值對輸入時間的影響。
 |19|	400,000	|
 |20	|410,600|	記憶體不足，效率下降|
 
+![External Sorting Input Time vs k](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework2/Input%20time.png)
+
+
 - 當 k 適中（例如 6~10）時，輸入時間最小。
 - 若 k 過大，每個 run buffer 空間太少，反而效率下降。
 
