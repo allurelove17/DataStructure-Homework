@@ -285,8 +285,11 @@ int main() {
 
 ### 1.Heap Function Time Complexity
 IsEmpty(): O(1)
+
 Top(): O(1)
+
 Push(): O(log n)
+
 Pop(): O(log n)
 
 ### 2.1 BST 概述
