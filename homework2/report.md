@@ -320,19 +320,7 @@ Pop(): O(log n)
 2. Deleting a node with one child: O(log n)
 3. Deleting a node with two children: O(log n)
 
----
-
-### 3. 外部排序分析 (External Sorting)
-
-好的，這就為您用中文詳細說明 Part (a) 的公式推導過程。
-
-### **Part (a) 總輸入時間 (Total Input Time) 公式推導**
-
-[cite_start]**目標**：推導外部排序第二階段（合併階段）讀取所有資料所需的總時間 $t_{input}$ 的公式 [cite: 2]。
-
-整個推導過程可以分為三個主要步驟：
-
----
+### 3.(a)
 
 #### **步驟一：計算合併所需的總趟數 (P)**
 
@@ -343,8 +331,6 @@ Pop(): O(log n)
 * 要將 `m` 個順串合併到剩下最後 1 個，所需要的合併趟數 `P` 是一個對數關係。如果 `m` 不是 `k` 的整數次方，則需要向上取整。
 * **公式**：
     $$P = \lceil \log_k m \rceil$$
-
----
 
 #### **步驟二：計算每一趟合併的輸入時間 ($t_{\text{input\_pass}}$)**
 
@@ -373,8 +359,6 @@ Pop(): O(log n)
     * 將「總額外開銷」和「總傳輸時間」相加，就得到完成一趟合併所需的總輸入時間。
     * **公式**：
         $$t_{\text{input\_pass}}(k) = \frac{n(k+1)}{S}(t_s + t_l) + n \cdot t_t$$
-
----
 
 #### **步驟三：組合最終公式**
 
