@@ -440,9 +440,7 @@ k 值對輸入時間的影響。
 ## 分析方法
 計算總輸入時間公式如下：
 
-\[
-t_{input} = \left\lceil \frac{\log(m)}{\log(k)} \right\rceil \times \left( \frac{n(k+1)}{S} (t_s + t_l) + n t_t \right)
-\]
+![公式]
 
 參數說明：
 
