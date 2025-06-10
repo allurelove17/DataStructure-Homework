@@ -371,7 +371,7 @@ Pop(): O(log n)
 ### 3.(b)
 根據上述推導的公式 $$t_{\text{input}}$$ 勢必存在一個最小值,而題目假設 $$t_{\text{CPU}}$$ 是一個常數,若此數值小於 $$t_{\text{input}}$$ 則題目的假設不成立
 
-!(https://github.com/allurelove17/DataStructure-Homework/blob/main/homework2/t_input_vs_k_plot.png)
+![image](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework2/t_input_vs_k_plot.png)
 
 
 
