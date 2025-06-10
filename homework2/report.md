@@ -292,7 +292,7 @@ Push(): O(log n)
 
 Pop(): O(log n)
 
-### 2. BST Height/log2(n) 
+### 2.(a) BST Height/log2(n) 
 | n | Height | log2_n | Height_log2_n_ratio |
 |---:|---:|---:|---:|
 | 100 | 13 | 6.6439 | 1.9567 |
@@ -314,71 +314,11 @@ Pop(): O(log n)
 由上表可知Height/log2(n) ratio都在2左右
 
 
-###2.3 BST 刪除函式程式碼範例（C++）
+### 2.(b) BST 刪除函式時間複雜度 O(log n)
 
-```cpp
-    TreeNode* deleteNode(TreeNode* node, int key) {
-        if (node == nullptr) return node;
-
-        if (key < node->key) {
-            node->left = deleteNode(node->left, key);
-        }
-        else if (key > node->key) {
-            node->right = deleteNode(node->right, key);
-        }
-        else {
-            // Node to be deleted found
-            if (node->left == nullptr) {
-                TreeNode* temp = node->right;
-                delete node;
-                return temp;
-            }
-            else if (node->right == nullptr) {
-                TreeNode* temp = node->left;
-                delete node;
-                return temp;
-            }
-
-            // Node with two children
-            TreeNode* temp = findMin(node->right);
-            node->key = temp->key;
-            node->right = deleteNode(node->right, temp->key);
-        }
-        return node;
-    }
-
-    void destroyTree(TreeNode* node) {
-        if (node) {
-            destroyTree(node->left);
-            destroyTree(node->right);
-            delete node;
-        }
-    }
-
-public:
-    BST() : root(nullptr) {}
-
-    ~BST() {
-        destroyTree(root);
-    }
-
-    void insert(int key) {
-        root = insert(root, key);
-    }
-
-    int getHeight() {
-        return getHeight(root);
-    }
-
-    // Delete function with O(log n) average, O(n) worst case complexity
-    void deleteKey(int key) {
-        root = deleteNode(root, key);
-    }
-};
-```
-
-- 隨著 n 增加，高度略大於 log₂(n)。
-- 原因為隨機插入未保證平衡，存在偏斜的情況。
+1. Deleting a leaf node: O(log n)
+2. Deleting a node with one child: O(log n)
+3. Deleting a node with two children: O(log n)
 
 ---
 
