@@ -21,6 +21,10 @@ public:
 ### 2.Binary Search Tree
 實作Binary Search Tree並插入隨機測資在不同的n size,並檢測height/log_2(n)是否在2左右
 
+### 3.Finish the exercise 1 in Textbook p.457
+(a) 推導出一個數學公式,當你使用k-way merge的時候能算出total input time
+(b) 使用(a)推導出的公式並帶入題目給的數值並檢查是否永遠存在一個k值使得t_CPU ≈ t_input
+
 ## 程式實作
 ### 1.2 程式碼範例（C++ 節錄）
 
