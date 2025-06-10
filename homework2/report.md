@@ -26,7 +26,7 @@ public:
 (b) 使用(a)推導出的公式並帶入題目給的數值並檢查是否永遠存在一個k值使得t_CPU ≈ t_input
 
 ## 程式實作
-### 1.2 程式碼範例（C++ 節錄）
+### 1.Heap
 
 ```cpp
 template <class T>
@@ -104,6 +104,181 @@ public:
         return heap.size();
     }
 };
+```
+
+### 2.BST
+
+```c++
+struct TreeNode {
+    int key;
+    TreeNode* left;
+    TreeNode* right;
+
+    TreeNode(int k) : key(k), left(nullptr), right(nullptr) {}
+};
+
+class BST {
+private:
+    TreeNode* root;
+
+    TreeNode* insert(TreeNode* node, int key) {
+        if (node == nullptr) {
+            return new TreeNode(key);
+        }
+
+        if (key < node->key) {
+            node->left = insert(node->left, key);
+        }
+        else if (key > node->key) {
+            node->right = insert(node->right, key);
+        }
+
+        return node;
+    }
+
+    int getHeight(TreeNode* node) {
+        if (node == nullptr) {
+            return 0;
+        }
+        return 1 + std::max(getHeight(node->left), getHeight(node->right));
+    }
+
+    TreeNode* findMin(TreeNode* node) {
+        while (node->left != nullptr) {
+            node = node->left;
+        }
+        return node;
+    }
+
+    TreeNode* deleteNode(TreeNode* node, int key) {
+        if (node == nullptr) {
+            return node;
+        }
+
+        if (key < node->key) {
+            node->left = deleteNode(node->left, key);
+        }
+        else if (key > node->key) {
+            node->right = deleteNode(node->right, key);
+        }
+        else {
+            if (node->left == nullptr && node->right == nullptr) {
+                delete node;
+                return nullptr;
+            }
+
+            else if (node->left == nullptr) {
+                TreeNode* temp = node->right;
+                delete node;
+                return temp;
+            }
+            else if (node->right == nullptr) {
+                TreeNode* temp = node->left;
+                delete node;
+                return temp;
+            }
+
+            else {
+                TreeNode* temp = findMin(node->right);
+
+                node->key = temp->key;
+
+                node->right = deleteNode(node->right, temp->key);
+            }
+        }
+
+        return node;
+    }
+
+    void destroyTree(TreeNode* node) {
+        if (node != nullptr) {
+            destroyTree(node->left);
+            destroyTree(node->right);
+            delete node;
+        }
+    }
+
+public:
+    BST() : root(nullptr) {}
+
+    ~BST() {
+        destroyTree(root);
+    }
+
+    void insert(int key) {
+        root = insert(root, key);
+    }
+
+    int height() {
+        return getHeight(root);
+    }
+
+    void deleteKey(int key) {
+        root = deleteNode(root, key);
+    }
+
+    bool isEmpty() {
+        return root == nullptr;
+    }
+};
+```
+
+### 3.
+```c++
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <vector>
+#include <iomanip>
+#include <limits>
+
+double calculate_total_input_time(double n, double S, double m, double ts, double tl, double tt, int k) {
+    if (k < 2) {
+        return -1.0;
+    }
+    double num_passes = std::ceil(std::log(m) / std::log(k));
+    double time_per_pass = (n * (k + 1.0) / S) * (ts + tl) + (n * tt);
+    return num_passes * time_per_pass;
+}
+
+int main() {
+    const double n = 200000.0;
+    const double S = 2000.0;
+    const double m = 64.0;
+    const double ts = 0.080;
+    const double tl = 0.020;
+    const double tt = 0.001;
+
+    std::ofstream csv_file("output_data.csv");
+    if (!csv_file.is_open()) {
+        std::cerr << "Error: Could not open file for writing." << std::endl;
+        return 1;
+    }
+
+    csv_file << "k,t_input\n";
+
+    double min_time = std::numeric_limits<double>::max();
+    int optimal_k = -1;
+
+    for (int k = 2; k <= static_cast<int>(m); ++k) {
+        double total_time = calculate_total_input_time(n, S, m, ts, tl, tt, k);
+        csv_file << k << "," << std::fixed << std::setprecision(2) << total_time << "\n";
+
+        if (total_time < min_time) {
+            min_time = total_time;
+            optimal_k = k;
+        }
+    }
+
+    csv_file.close();
+
+    std::cout << "Successfully generated output_data.csv" << std::endl;
+    std::cout << "--- Analysis Summary ---" << std::endl;
+    std::cout << "Optimal k: " << optimal_k << std::endl;
+    std::cout << "Minimum t_input: " << std::fixed << std::setprecision(2) << min_time << " seconds." << std::endl;
+
+    return 0;
+}
 ```
 ---
 
