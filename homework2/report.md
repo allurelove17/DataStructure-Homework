@@ -18,6 +18,9 @@ public:
 ```
 使用上面的abstract class去實作Max/Min Heap.
 
+### 2.Binary Search Tree
+實作Binary Search Tree並插入隨機測資在不同的n size,並檢測height/log_2(n)是否在2左右
+
 ## 程式實作
 ### 1.2 程式碼範例（C++ 節錄）
 
