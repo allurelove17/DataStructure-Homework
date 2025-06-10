@@ -4,13 +4,19 @@
 
 ## 解題說明
 
-### 1.1 MinHeap 概述
-
-MinHeap 是一種完全二元樹，滿足父節點值小於等於子節點的特性。主要操作包含：
-
-- `Push`：插入元素並向上調整（up-heapify）  
-- `Pop`：取出最小元素並向下調整（down-heapify）  
-- `Top`：查看堆頂元素  
+### 1. Max/Min Heap
+```c++
+template <class T>
+class PQ {
+public:
+    virtual ~PQ() {}
+    virtual bool IsEmpty() const = 0;
+    virtual const T& Top() const = 0;
+    virtual void Push(const T&) = 0;
+    virtual void Pop() = 0;
+};
+```
+使用上面的abstract class去實作Max/Min Heap.
 
 ## 程式實作
 ### 1.2 程式碼範例（C++ 節錄）
