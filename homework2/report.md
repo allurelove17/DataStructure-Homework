@@ -280,19 +280,8 @@ int main() {
     return 0;
 }
 ```
----
 
-### ✅ MinHeap 測試結果：
-
--Inserting values: 20 15 25 10 5 30 8
-
--Extracting elements in ascending order: 5 8 10 15 20 25 30
-
-- 證明堆結構維持正確，輸出為遞增順序。
-
----
 ## 效能分析
-## 2. 二元搜尋樹 (BST) 高度分析與刪除
 
 ### 2.1 BST 概述
 
