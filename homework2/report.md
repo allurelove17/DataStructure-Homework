@@ -101,14 +101,141 @@ public:
 - 證明堆結構維持正確，輸出為遞增順序。
 
 ---
+## 2. 二元搜尋樹 (BST) 高度分析與刪除
 
+### 2.1 BST 概述
+
+BST 是一種結構化的樹，左子樹所有節點值小於根節點，右子樹所有節點值大於根節點。主要操作：
+
+- 插入 (Insert）  
+- 刪除 (Delete) 
+- 計算高度 (Height)
+  
 ### ✅ BST 高度分析：
 
 | n    | Height | log₂(n) | Ratio |
 |------|--------|---------|-------|
-| 100  | ~11    | 6.64    | ~1.65 |
-| 1000 | ~18    | 9.97    | ~1.80 |
-| 10000| ~27    | 13.29   | ~2.03 |
+|100	|13|	6.64|	1.96|
+|200	|18	|7.64	|2.35|
+|300	|17	|8.23	|2.07|
+|400|	17|	8.64|	1.97|
+|500|	19	|8.97|	2.12|
+|600	|18	|9.23|	1.95|
+|700	|19	|9.45	|2.01|
+|800	|22	|9.64	|2.28|
+|900	|21	|9.81	|2.14|
+|1000	|22	|9.97	|2.21|
+|2000	|25	|10.97	|2.28|
+|3000	|24	|11.55	|2.08|
+|4000	|28	|11.97	|2.34|
+|5000	|30	|12.29	|2.44|
+|6000	|30	|12.55	|2.39|
+|7000	|32	|12.77	|2.51|
+|8000	|31	|12.97	|2.39|
+|9000	|32	|13.14	|2.44|
+|10000	|31	|13.29	|2.33|
+
+###2.3 BST 刪除函式程式碼範例（C++）
+
+```cpp
+struct TreeNode {
+    int key;
+    TreeNode* left;
+    TreeNode* right;
+
+    TreeNode(int k) : key(k), left(nullptr), right(nullptr) {}
+};
+
+class BST {
+private:
+    TreeNode* root;
+
+    TreeNode* insert(TreeNode* node, int key) {
+        if (node == nullptr) {
+            return new TreeNode(key);
+        }
+
+        if (key < node->key) {
+            node->left = insert(node->left, key);
+        }
+        else if (key > node->key) {
+            node->right = insert(node->right, key);
+        }
+
+        return node;
+    }
+
+    int getHeight(TreeNode* node) {
+        if (node == nullptr) return 0;
+        return 1 + std::max(getHeight(node->left), getHeight(node->right));
+    }
+
+    TreeNode* findMin(TreeNode* node) {
+        while (node && node->left) {
+            node = node->left;
+        }
+        return node;
+    }
+
+    TreeNode* deleteNode(TreeNode* node, int key) {
+        if (node == nullptr) return node;
+
+        if (key < node->key) {
+            node->left = deleteNode(node->left, key);
+        }
+        else if (key > node->key) {
+            node->right = deleteNode(node->right, key);
+        }
+        else {
+            // Node to be deleted found
+            if (node->left == nullptr) {
+                TreeNode* temp = node->right;
+                delete node;
+                return temp;
+            }
+            else if (node->right == nullptr) {
+                TreeNode* temp = node->left;
+                delete node;
+                return temp;
+            }
+
+            // Node with two children
+            TreeNode* temp = findMin(node->right);
+            node->key = temp->key;
+            node->right = deleteNode(node->right, temp->key);
+        }
+        return node;
+    }
+
+    void destroyTree(TreeNode* node) {
+        if (node) {
+            destroyTree(node->left);
+            destroyTree(node->right);
+            delete node;
+        }
+    }
+
+public:
+    BST() : root(nullptr) {}
+
+    ~BST() {
+        destroyTree(root);
+    }
+
+    void insert(int key) {
+        root = insert(root, key);
+    }
+
+    int getHeight() {
+        return getHeight(root);
+    }
+
+    // Delete function with O(log n) average, O(n) worst case complexity
+    void deleteKey(int key) {
+        root = deleteNode(root, key);
+    }
+};
+```
 
 - 隨著 n 增加，高度略大於 log₂(n)。
 - 原因為隨機插入未保證平衡，存在偏斜的情況。
