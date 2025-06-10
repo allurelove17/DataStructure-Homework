@@ -138,45 +138,6 @@ BST 是一種結構化的樹，左子樹所有節點值小於根節點，右子�
 ###2.3 BST 刪除函式程式碼範例（C++）
 
 ```cpp
-struct TreeNode {
-    int key;
-    TreeNode* left;
-    TreeNode* right;
-
-    TreeNode(int k) : key(k), left(nullptr), right(nullptr) {}
-};
-
-class BST {
-private:
-    TreeNode* root;
-
-    TreeNode* insert(TreeNode* node, int key) {
-        if (node == nullptr) {
-            return new TreeNode(key);
-        }
-
-        if (key < node->key) {
-            node->left = insert(node->left, key);
-        }
-        else if (key > node->key) {
-            node->right = insert(node->right, key);
-        }
-
-        return node;
-    }
-
-    int getHeight(TreeNode* node) {
-        if (node == nullptr) return 0;
-        return 1 + std::max(getHeight(node->left), getHeight(node->right));
-    }
-
-    TreeNode* findMin(TreeNode* node) {
-        while (node && node->left) {
-            node = node->left;
-        }
-        return node;
-    }
-
     TreeNode* deleteNode(TreeNode* node, int key) {
         if (node == nullptr) return node;
 
@@ -242,15 +203,47 @@ public:
 
 ---
 
-### ✅ 外部排序分析（k-way merge）：
+### 3. 外部排序分析 (External Sorting)
+###問題描述
+-模擬在有限記憶體下，利用 Replacement Selection 技術做多路合併排序（k-way merge），計算不同 
+k 值對輸入時間的影響。
 
+###參數設定
+| 參數  | 數值 |
+|----|----------------|
+|尋道時間t  	|80.00 ms|	
+|延遲時間	|20.00 ms|	
+|每筆資料傳輸時間 	|1.00 ms|	
+|資料筆數𝑛|2000|	
+|初始runs數量𝑚|64|
+|記憶體容量 𝑆|2000 筆|
+
+
+
+
+
+###輸入時間統計表
 | k  | Input Time (s) | 備註                     |
 |----|----------------|--------------------------|
-| 2  | 9.640          |                          |
-| 4  | 7.320          |                          |
-| 8  | 6.160          | 最佳點（記憶體與磁碟平衡） |
-| 16 | 6.000          |                          |
-| 20 | N/A            | 記憶體不足               |
+|2	|221,100|	
+|3	|231,600|	
+|4	|242,200|	
+|5	|252,700|	
+|6	|263,300|	
+|7	|273,900|	
+|8	|284,400	|最佳點附近|
+|9	|294,800	|
+|10	|305,300	|
+|11	|316,300	|
+|12	|326,600	|
+|13|	337,000	|
+|14|	348,200	|
+|15|	358,800	|
+|16|	369,500	|
+|17|	380,200	|
+|18	|390,500	|
+|19|	400,000	|
+|20	|410,600|	記憶體不足，效率下降|
 
 - 當 k 適中（例如 6~10）時，輸入時間最小。
 - 若 k 過大，每個 run buffer 空間太少，反而效率下降。
