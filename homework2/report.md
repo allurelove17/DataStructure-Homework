@@ -283,7 +283,7 @@ int main() {
 
 ## 效能分析
 
-### 1.Heap Function Time Complexity
+### 1. Heap Function Time Complexity
 IsEmpty(): O(1)
 
 Top(): O(1)
@@ -292,16 +292,7 @@ Push(): O(log n)
 
 Pop(): O(log n)
 
-### 2.1 BST 概述
-
-BST 是一種結構化的樹，左子樹所有節點值小於根節點，右子樹所有節點值大於根節點。主要操作：
-
-- 插入 (Insert）  
-- 刪除 (Delete) 
-- 計算高度 (Height)
-  
-### ✅ BST 高度分析：
-
+### 2. BST Height/log2(n) 
 | n    | Height | log₂(n) | Ratio |
 |------|--------|---------|-------|
 |100	|13|	6.64|	1.96|
@@ -325,6 +316,8 @@ BST 是一種結構化的樹，左子樹所有節點值小於根節點，右子�
 |10000	|31	|13.29	|2.33|
 
 ![BST Height vs log2(n)](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework2/BST.png)
+
+由上表可知Height/log2(n) ratio都在2左右
 
 
 ###2.3 BST 刪除函式程式碼範例（C++）
