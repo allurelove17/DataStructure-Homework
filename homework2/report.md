@@ -440,7 +440,7 @@ k 值對輸入時間的影響。
 ## 分析方法
 計算總輸入時間公式如下：
 
-![公式]
+![公式](https://github.com/allurelove17/DataStructure-Homework/blob/main/homework2/%E5%85%AC%E5%BC%8F.png)
 
 參數說明：
 
