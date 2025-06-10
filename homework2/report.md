@@ -283,6 +283,12 @@ int main() {
 
 ## 效能分析
 
+### 1.Heap Function Time Complexity
+IsEmpty(): O(1)
+Top(): O(1)
+Push(): O(log n)
+Pop(): O(log n)
+
 ### 2.1 BST 概述
 
 BST 是一種結構化的樹，左子樹所有節點值小於根節點，右子樹所有節點值大於根節點。主要操作：
