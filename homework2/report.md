@@ -1,39 +1,102 @@
 # 41243219  
 # 41243241  
 
-## 解題說明
 
-本次作業分為三個主要問題：
+## 1. MinHeap 實作與測試
 
-1. **最小/最大堆積（Min/Max Heap）**
-   - 實作以模板類別方式撰寫的優先佇列結構，支援 `Push`、`Pop`、`Top` 等操作。
-   - 使用上浮與下沉（heapify）機制來維持堆積的結構性質。
+### 1.1 MinHeap 概述
 
-2. **二元搜尋樹（Binary Search Tree, BST）**
-   - 提供節點插入、刪除與高度計算功能。
-   - 利用隨機資料插入分析 BST 的平均高度與 log₂(n) 的比值。
+MinHeap 是一種完全二元樹，滿足父節點值小於等於子節點的特性。主要操作包含：
 
-3. **外部排序分析（External Sorting）**
-   - 模擬不同 k-way merge 的輸入成本。
-   - 回答課本第 9 章第 1 題（p.457 Exercise 1）關於 Replacement Selection 與合併次數問題。
+- `Push`：插入元素並向上調整（up-heapify）  
+- `Pop`：取出最小元素並向下調整（down-heapify）  
+- `Top`：查看堆頂元素  
+
+### 1.2 程式碼範例（C++ 節錄）
+
+```cpp
+template <class T>
+class PQ {
+public:
+    virtual ~PQ() {}
+    virtual bool IsEmpty() const = 0;
+    virtual const T& Top() const = 0;
+    virtual void Push(const T&) = 0;
+    virtual void Pop() = 0;
+};
+
+template <class T>
+class MinHeap : public PQ<T> {
+private:
+    std::vector<T> heap;
+
+    void heapifyUp(int index) {
+        if (index == 0) return;
+        int parent = (index - 1) / 2;
+        if (heap[index] < heap[parent]) {
+            std::swap(heap[index], heap[parent]);
+            heapifyUp(parent);
+        }
+    }
+
+    void heapifyDown(int index) {
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+        int smallest = index;
+
+        if (left < heap.size() && heap[left] < heap[smallest]) {
+            smallest = left;
+        }
+        if (right < heap.size() && heap[right] < heap[smallest]) {
+            smallest = right;
+        }
+
+        if (smallest != index) {
+            std::swap(heap[index], heap[smallest]);
+            heapifyDown(smallest);
+        }
+    }
+
+public:
+    bool IsEmpty() const override {
+        return heap.empty();
+    }
+
+    const T& Top() const override {
+        if (heap.empty()) {
+            throw std::runtime_error("Priority queue is empty");
+        }
+        return heap[0];
+    }
+
+    void Push(const T& element) override {
+        heap.push_back(element);
+        heapifyUp(heap.size() - 1);
+    }
+
+    void Pop() override {
+        if (heap.empty()) {
+            throw std::runtime_error("Priority queue is empty");
+        }
+
+        heap[0] = heap.back();
+        heap.pop_back();
+        if (!heap.empty()) {
+            heapifyDown(0);
+        }
+    }
+
+    size_t size() const {
+        return heap.size();
+    }
+};
 
 ---
-
-## 程式實作
-
-- 使用 C++ 語言完成三個模組：
-  - `PQ<T>` 為抽象優先佇列類別。
-  - `MinHeap<T>` 與 `MaxHeap<T>` 分別為最小與最大堆。
-  - `BST` 提供 `insert()`、`deleteKey()`、`getHeight()` 等操作。
-  - `analyzeExternalSorting()` 評估外部排序在不同參數下的表現。
-  - `solveTextbookExercise()` 為課本題目計算模擬。
-
----
-
-## 效能分析
 
 ### ✅ MinHeap 測試結果：
 
+-Inserting values: 20 15 25 10 5 30 8
+-Extracting elements in ascending order: 5 8 10 15 20 25 30
 
 - 證明堆結構維持正確，輸出為遞增順序。
 
